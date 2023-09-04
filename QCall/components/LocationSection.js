@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Platform, Text, View, StyleSheet } from "react-native";
+import {
+	Platform,
+	Text,
+	View,
+	StyleSheet,
+	Pressable,
+	Alert,
+} from "react-native";
 import * as Device from "expo-device";
 import * as Location from "expo-location";
 
 var latitude = "";
 var longitude = "";
 export default function LocationSection() {
+	const [user, setUser] = React.useState([]);
+
+	function fetchData() {
+		const json = fetch("https://randomuser.me/api/?results=2")
+			.then((response) => response.json())
+			.then((data) => setUser(data));
+		console.log(user.results[0].cell);
+	}
 	const [location, setLocation] = useState(null);
 	const [errorMsg, setErrorMsg] = useState(null);
 
@@ -35,7 +50,12 @@ export default function LocationSection() {
 		<View style={styles.container}>
 			<Text style={styles.paragraph}>Your latitude is:{latitude}</Text>
 			<Text style={styles.paragraph}>Your longitude is: {longitude}</Text>
-			{/* <Text style={styles.paragraph}> {text}</Text> */}
+			<Pressable style={styles.button} onPress={fetchData}>
+				<Text style={styles.buttonText}>Get Data</Text>
+			</Pressable>
+			<Text style={styles.paragraph}>
+				{/* Your longitude is: {user.results[0].name.first} */}
+			</Text>
 		</View>
 	);
 }
@@ -54,5 +74,22 @@ const styles = StyleSheet.create({
 	paragraph: {
 		fontSize: 18,
 		textAlign: "center",
+	},
+	button: {
+		alignItems: "center",
+		justifyContent: "center",
+		paddingVertical: 12,
+		paddingHorizontal: 32,
+		marginHorizontal: 60,
+		borderRadius: 8,
+		elevation: 3,
+		backgroundColor: "black",
+	},
+	buttonText: {
+		fontSize: 16,
+		lineHeight: 21,
+		fontWeight: "bold",
+		letterSpacing: 0.25,
+		color: "white",
 	},
 });
