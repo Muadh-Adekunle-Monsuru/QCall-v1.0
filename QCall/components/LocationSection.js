@@ -49,9 +49,9 @@ export default function LocationSection() {
 			.then((response) => response.json())
 			.then((data) => {
 				setUser(JSON.stringify(data));
-				setStreet(data.results[0].formatted);
+				setStreet(JSON.stringify(data.results[0].formatted));
 				setLga(data.results[0].components.county);
-				setState(data.results[0].components.state);
+				setState(JSON.stringify(data.results[0].components.state));
 			})
 			.catch((error) => {
 				console.error("Error fetching data:", error);
@@ -61,15 +61,17 @@ export default function LocationSection() {
 		<View style={styles.container}>
 			<View style={{ flex: 0.8 }}>
 				<Text style={styles.blockHeading}>Location</Text>
-				{(user && <Text style={styles.nonEmphasised}>{street}</Text>) || (
-					<Text style={styles.nonEmphasised}>Street</Text>
-				)}
-				{(user && <Text style={styles.emphsised}>{lga}</Text>) || (
-					<Text style={styles.emphsised}>LGA</Text>
-				)}
-				{(user && <Text style={styles.nonEmphasised}>{state}</Text>) || (
-					<Text style={styles.nonEmphasised}>State</Text>
-				)}
+				<View style={{ flex: 1, justifyContent: "center" }}>
+					{(user && <Text style={styles.nonEmphasised}>{street}</Text>) || (
+						<Text style={styles.nonEmphasised}>Street</Text>
+					)}
+					{(user && <Text style={styles.emphsised}>{lga}</Text>) || (
+						<Text style={styles.emphsised}>LGA</Text>
+					)}
+					{(user && <Text style={styles.nonEmphasised}>{state}</Text>) || (
+						<Text style={styles.nonEmphasised}>State</Text>
+					)}
+				</View>
 			</View>
 			<View style={{ flex: 0.2 }}>
 				<Pressable style={styles.button} onPress={handleClick}>
@@ -82,14 +84,17 @@ export default function LocationSection() {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 0.5,
+		flex: 0.4,
 		alignItems: "center",
 		justifyContent: "center",
-		padding: 20,
+		paddingHorizontal: 25,
+		paddingVertical: 20,
 		backgroundColor: "#F5EBE0",
 		borderRadius: 50,
 		borderWidth: 2,
 		borderColor: "#D5BDAF",
+		margin: 10,
+		marginHorizontal: 20,
 	},
 	blockHeading: {
 		fontWeight: "bold",
@@ -98,12 +103,12 @@ const styles = StyleSheet.create({
 	},
 	nonEmphasised: {
 		margin: 10,
-		fontSize: 10,
+		fontSize: 15,
 		textAlign: "center",
 	},
 	emphsised: {
 		margin: 5,
-		fontSize: 30,
+		fontSize: 70,
 		textAlign: "center",
 		fontWeight: "300",
 	},
@@ -111,11 +116,11 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		paddingVertical: 12,
-		paddingHorizontal: 32,
-		marginHorizontal: 60,
+		paddingHorizontal: 92,
+		marginHorizontal: 10,
 		borderRadius: 8,
 		elevation: 3,
-		backgroundColor: "#D5BDAF",
+		backgroundColor: "#D5BDA9",
 	},
 	buttonText: {
 		fontSize: 16,
