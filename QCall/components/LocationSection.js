@@ -20,6 +20,11 @@ export default function LocationSection() {
 	const [lga, setLga] = useState(""); // Initialize street state
 	const [state, setState] = useState(""); // Initialize street state
 	const [buttonActivation, setButtonActivation] = useState(false);
+	const [buttonText, setButtonText] = useState("Waiting For Coordinates");
+
+	const getIsFormValid = () => {
+		return buttonActivation;
+	};
 	useEffect(() => {
 		(async () => {
 			let { status } = await Location.requestForegroundPermissionsAsync();
@@ -29,6 +34,8 @@ export default function LocationSection() {
 			}
 			let location = await Location.getCurrentPositionAsync({});
 			setLocation(location);
+			setButtonActivation(true);
+			setButtonText("Get Address");
 		})();
 	}, []);
 
@@ -36,8 +43,8 @@ export default function LocationSection() {
 	if (errorMsg) {
 		Alert.alert(errorMsg);
 	} else if (location) {
-		Alert.alert("Cooredinated Gotten");
-		setButtonActivation(true);
+		// Alert.alert("Cooredinated Gotten");
+		//
 		latitude = location.coords.latitude;
 		longitude = location.coords.longitude;
 		text = JSON.stringify(location);
@@ -50,9 +57,9 @@ export default function LocationSection() {
 			.then((response) => response.json())
 			.then((data) => {
 				setUser(JSON.stringify(data));
-				setStreet(JSON.stringify(data.results[0].formatted));
+				setStreet(data.results[0].formatted);
 				setLga(data.results[0].components.county);
-				setState(JSON.stringify(data.results[0].components.state));
+				setState(data.results[0].components.state);
 			})
 			.catch((error) => {
 				console.error("Error fetching data:", error);
@@ -76,11 +83,11 @@ export default function LocationSection() {
 			</View>
 			<View style={{ flex: 0.2 }}>
 				<Pressable
-					style={styles.button}
+					style={getIsFormValid() ? styles.buttonE : styles.buttonD}
 					onPress={handleClick}
-					disabled={buttonActivation}
+					disabled={!getIsFormValid()}
 				>
-					<Text style={styles.buttonText}>Get Location</Text>
+					<Text style={styles.buttonText}>{buttonText}</Text>
 				</Pressable>
 			</View>
 		</View>
@@ -96,7 +103,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 20,
 		backgroundColor: "#F5EBE0",
 		borderRadius: 50,
-		borderWidth: 2,
+		borderWidth: 1,
 		borderColor: "#D5BDAF",
 		margin: 10,
 		marginHorizontal: 20,
@@ -117,7 +124,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontWeight: "300",
 	},
-	button: {
+	buttonE: {
 		alignItems: "center",
 		justifyContent: "center",
 		paddingVertical: 12,
@@ -135,7 +142,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 10,
 		borderRadius: 8,
 		elevation: 3,
-		backgroundColor: "#D5BDA9",
+		backgroundColor: "gray",
 	},
 	buttonText: {
 		fontSize: 16,
