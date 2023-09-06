@@ -9,7 +9,9 @@ import {
 	Button,
 	Linking,
 } from "react-native";
-
+import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function NumberSection({ thelga, setTheLGA }) {
 	const [responseData, setResponseData] = useState(null);
 
@@ -28,35 +30,45 @@ export default function NumberSection({ thelga, setTheLGA }) {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.blockHeading}>Emergency Type:</Text>
-			<View style={{ flex: 0.9, justifyContent: "center" }}>
+			<View style={{ flex: 0.9, justifyContent: "space-evenly" }}>
 				{responseData && (
 					<View>
-						<Text
+						<Pressable
 							style={styles.pills}
 							onPress={() =>
 								Linking.openURL(`tel:${JSON.stringify(responseData[0].fire)}`)
 							}
 						>
-							Fire: {responseData[0].fire}
-						</Text>
-						<Text
-							style={styles.pills}
+							<FontAwesome name="fire" size={24} color="black" />
+							<Text>Fire:</Text>
+							<Text>{responseData[0].fire}</Text>
+						</Pressable>
+						<Pressable
+							style={[styles.pills, { backgroundColor: "blue" }]}
 							onPress={() =>
 								Linking.openURL(
 									`tel:${JSON.stringify(responseData[0].medical)}`
 								)
 							}
 						>
-							Medical :{responseData[0].medical}
-						</Text>
-						<Text
-							style={styles.pills}
+							<FontAwesome5 name="clinic-medical" size={24} color="black" />
+							<Text>Medical :</Text>
+							<Text> {responseData[0].medical}</Text>
+						</Pressable>
+						<Pressable
+							style={[styles.pills, { backgroundColor: "red" }]}
 							onPress={() =>
 								Linking.openURL(`tel:${JSON.stringify(responseData[0].police)}`)
 							}
 						>
-							Police: {responseData[0].police}
-						</Text>
+							<MaterialCommunityIcons
+								name="police-badge"
+								size={24}
+								color="black"
+							/>
+							<Text>Police:</Text>
+							<Text>{responseData[0].police}</Text>
+						</Pressable>
 					</View>
 				)}
 			</View>
@@ -87,11 +99,14 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	pills: {
-		fontSize: 21,
+		fontSize: 25,
 		borderRadius: 30,
-		paddingHorizontal: 90,
+		paddingHorizontal: 95,
 		paddingVertical: 30,
 		borderWidth: 2,
 		marginVertical: 5,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-around",
 	},
 });
