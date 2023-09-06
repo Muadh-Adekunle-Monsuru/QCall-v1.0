@@ -9,13 +9,13 @@ import {
 	Button,
 } from "react-native";
 
-export default function NumberSection(props) {
+export default function NumberSection({ thelga, setTheLGA }) {
 	const [responseData, setResponseData] = useState(null);
 
 	const fetchData = async () => {
 		try {
 			const response = await fetch(
-				"https://sheetdb.io/api/v1/sc073hiofw97m/search?lganame=oron&sheet=data"
+				`https://sheetdb.io/api/v1/sc073hiofw97m/search?lganame=${thelga}&sheet=data`
 			);
 			const data = await response.json();
 			setResponseData(data);
@@ -27,15 +27,20 @@ export default function NumberSection(props) {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.blockHeading}>Contacts</Text>
-
-			<Button title="Fetch Data" onPress={fetchData} />
 			{responseData && (
 				<View>
-					<Text>{props.thelga}</Text>
-					<Text>API Response:</Text>
-					<Text>{JSON.stringify(responseData, null, 2)}</Text>
+					<Text style={{ fontSize: 30 }}>
+						Fire: {JSON.stringify(responseData[0].fire)}
+					</Text>
+					<Text style={{ fontSize: 30 }}>
+						Medical : {JSON.stringify(responseData[0].medical)}
+					</Text>
+					<Text style={{ fontSize: 30 }}>
+						Police: {JSON.stringify(responseData[0].police)}
+					</Text>
 				</View>
 			)}
+			<Button title="Fetch Data" onPress={fetchData} />
 		</View>
 	);
 }
@@ -44,7 +49,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 0.6,
 		alignItems: "center",
-		justifyContent: "center",
+		// justifyContent: "center",
 		paddingHorizontal: 25,
 		paddingVertical: 20,
 		backgroundColor: "#F5EBE0",

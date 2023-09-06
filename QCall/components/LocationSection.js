@@ -86,7 +86,7 @@ export default function LocationSection({ thelga, setTheLGA }) {
 				setUser(JSON.stringify(data));
 				setStreet(data.results[0].formatted);
 				setLga(data.results[0].components.county);
-				setTheLGA(lga);
+				setTheLGA(data.results[0].components.county);
 				setState(data.results[0].components.state);
 			})
 			.catch((error) => {
