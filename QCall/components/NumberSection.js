@@ -34,7 +34,13 @@ export default function NumberSection({ thelga, setTheLGA }) {
 				{responseData && (
 					<View>
 						<Pressable
-							style={styles.pills}
+							style={[
+								styles.pills,
+								{
+									backgroundColor: "#ffe5d9",
+									borderColor: "#f4acb7",
+								},
+							]}
 							onPress={() =>
 								Linking.openURL(`tel:${JSON.stringify(responseData[0].fire)}`)
 							}
@@ -44,7 +50,10 @@ export default function NumberSection({ thelga, setTheLGA }) {
 							<Text>{responseData[0].fire}</Text>
 						</Pressable>
 						<Pressable
-							style={[styles.pills, { backgroundColor: "blue" }]}
+							style={[
+								styles.pills,
+								{ backgroundColor: "#ccd5ae", borderColor: "#e9edc9" },
+							]}
 							onPress={() =>
 								Linking.openURL(
 									`tel:${JSON.stringify(responseData[0].medical)}`
@@ -56,7 +65,10 @@ export default function NumberSection({ thelga, setTheLGA }) {
 							<Text> {responseData[0].medical}</Text>
 						</Pressable>
 						<Pressable
-							style={[styles.pills, { backgroundColor: "red" }]}
+							style={[
+								styles.pills,
+								{ backgroundColor: "#bde0fe", borderColor: "#a2d2ff" },
+							]}
 							onPress={() =>
 								Linking.openURL(`tel:${JSON.stringify(responseData[0].police)}`)
 							}
@@ -103,7 +115,7 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		paddingHorizontal: 95,
 		paddingVertical: 30,
-		borderWidth: 2,
+		borderWidth: 1,
 		marginVertical: 5,
 		flexDirection: "row",
 		alignItems: "center",

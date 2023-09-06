@@ -109,15 +109,6 @@ export default function LocationSection({ thelga, setTheLGA }) {
 					)}
 				</View>
 			</View>
-			{/* <View style={{ flex: 0.2 }}>
-				<Pressable
-					style={getIsFormValid() ? styles.buttonE : styles.buttonD}
-					onPress={handleClick}
-					disabled={!getIsFormValid()}
-				>
-					<Text style={styles.buttonText}>{buttonText}</Text>
-				</Pressable>
-			</View> */}
 		</View>
 	);
 }
