@@ -19,7 +19,7 @@ export default function LocationSection() {
 	const [street, setStreet] = useState(""); // Initialize street state
 	const [lga, setLga] = useState(""); // Initialize street state
 	const [state, setState] = useState(""); // Initialize street state
-
+	const [buttonActivation, setButtonActivation] = useState(false);
 	useEffect(() => {
 		(async () => {
 			let { status } = await Location.requestForegroundPermissionsAsync();
@@ -27,7 +27,6 @@ export default function LocationSection() {
 				setErrorMsg("Permission to access location was denied");
 				return;
 			}
-
 			let location = await Location.getCurrentPositionAsync({});
 			setLocation(location);
 		})();
@@ -37,6 +36,8 @@ export default function LocationSection() {
 	if (errorMsg) {
 		Alert.alert(errorMsg);
 	} else if (location) {
+		Alert.alert("Cooredinated Gotten");
+		setButtonActivation(true);
 		latitude = location.coords.latitude;
 		longitude = location.coords.longitude;
 		text = JSON.stringify(location);
@@ -74,7 +75,11 @@ export default function LocationSection() {
 				</View>
 			</View>
 			<View style={{ flex: 0.2 }}>
-				<Pressable style={styles.button} onPress={handleClick}>
+				<Pressable
+					style={styles.button}
+					onPress={handleClick}
+					disabled={buttonActivation}
+				>
 					<Text style={styles.buttonText}>Get Location</Text>
 				</Pressable>
 			</View>
@@ -113,6 +118,16 @@ const styles = StyleSheet.create({
 		fontWeight: "300",
 	},
 	button: {
+		alignItems: "center",
+		justifyContent: "center",
+		paddingVertical: 12,
+		paddingHorizontal: 92,
+		marginHorizontal: 10,
+		borderRadius: 8,
+		elevation: 3,
+		backgroundColor: "#D5BDA9",
+	},
+	buttonD: {
 		alignItems: "center",
 		justifyContent: "center",
 		paddingVertical: 12,
