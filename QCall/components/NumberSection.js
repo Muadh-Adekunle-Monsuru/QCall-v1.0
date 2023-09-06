@@ -7,6 +7,7 @@ import {
 	Pressable,
 	Alert,
 	Button,
+	Linking,
 } from "react-native";
 
 export default function NumberSection({ thelga, setTheLGA }) {
@@ -26,21 +27,42 @@ export default function NumberSection({ thelga, setTheLGA }) {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.blockHeading}>Contacts</Text>
-			{responseData && (
-				<View>
-					<Text style={{ fontSize: 30 }}>
-						Fire: {JSON.stringify(responseData[0].fire)}
-					</Text>
-					<Text style={{ fontSize: 30 }}>
-						Medical : {JSON.stringify(responseData[0].medical)}
-					</Text>
-					<Text style={{ fontSize: 30 }}>
-						Police: {JSON.stringify(responseData[0].police)}
-					</Text>
-				</View>
-			)}
-			<Button title="Fetch Data" onPress={fetchData} />
+			<Text style={styles.blockHeading}>Emergency Type:</Text>
+			<View style={{ flex: 0.9, justifyContent: "center" }}>
+				{responseData && (
+					<View>
+						<Text
+							style={styles.pills}
+							onPress={() =>
+								Linking.openURL(`tel:${JSON.stringify(responseData[0].fire)}`)
+							}
+						>
+							Fire: {responseData[0].fire}
+						</Text>
+						<Text
+							style={styles.pills}
+							onPress={() =>
+								Linking.openURL(
+									`tel:${JSON.stringify(responseData[0].medical)}`
+								)
+							}
+						>
+							Medical :{responseData[0].medical}
+						</Text>
+						<Text
+							style={styles.pills}
+							onPress={() =>
+								Linking.openURL(`tel:${JSON.stringify(responseData[0].police)}`)
+							}
+						>
+							Police: {responseData[0].police}
+						</Text>
+					</View>
+				)}
+			</View>
+			<View style={{ flex: 0.1 }}>
+				<Button title="Fetch Data" onPress={fetchData} />
+			</View>
 		</View>
 	);
 }
@@ -63,5 +85,13 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		fontSize: 35,
 		textAlign: "center",
+	},
+	pills: {
+		fontSize: 21,
+		borderRadius: 30,
+		paddingHorizontal: 90,
+		paddingVertical: 30,
+		borderWidth: 2,
+		marginVertical: 5,
 	},
 });
