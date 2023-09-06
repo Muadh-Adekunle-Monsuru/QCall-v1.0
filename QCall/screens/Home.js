@@ -3,10 +3,11 @@ import { Platform, Text, View, StyleSheet } from "react-native";
 import LocationSection from "../components/LocationSection";
 import NumberSection from "../components/NumberSection";
 export default function Home() {
+	const [thelga, setTheLGA] = useState("Initial LGA");
 	return (
 		<View style={styles.container}>
-			<LocationSection />
-			<NumberSection />
+			<LocationSection thelga={thelga} setTheLGA={setTheLGA} />
+			<NumberSection thelga={thelga} />
 		</View>
 	);
 }

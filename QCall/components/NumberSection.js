@@ -9,7 +9,7 @@ import {
 	Button,
 } from "react-native";
 
-export default function NumberSection() {
+export default function NumberSection(props) {
 	const [responseData, setResponseData] = useState(null);
 
 	const fetchData = async () => {
@@ -31,6 +31,7 @@ export default function NumberSection() {
 			<Button title="Fetch Data" onPress={fetchData} />
 			{responseData && (
 				<View>
+					<Text>{props.thelga}</Text>
 					<Text>API Response:</Text>
 					<Text>{JSON.stringify(responseData, null, 2)}</Text>
 				</View>

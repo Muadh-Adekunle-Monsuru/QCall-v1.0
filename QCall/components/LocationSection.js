@@ -6,14 +6,18 @@ import {
 	StyleSheet,
 	Pressable,
 	Alert,
+	Linking,
+	AlertComponent,
 } from "react-native";
 import * as Device from "expo-device";
 import * as Location from "expo-location";
 
 var latitude = "";
 var longitude = "";
-export default function LocationSection() {
+export default function LocationSection({ thelga, setTheLGA }) {
 	const [location, setLocation] = useState(null);
+	const [locationEnabled, setLocationEnabled] = useState(false);
+
 	const [errorMsg, setErrorMsg] = useState(null);
 	const [user, setUser] = useState(null); // Change initial state to null
 	const [street, setStreet] = useState(""); // Initialize street state
@@ -25,30 +29,53 @@ export default function LocationSection() {
 	const getIsFormValid = () => {
 		return buttonActivation;
 	};
+
 	useEffect(() => {
 		(async () => {
+			const hasLocationServicesEnabled =
+				await Location.hasServicesEnabledAsync();
+
+			if (!hasLocationServicesEnabled) {
+				Alert.alert(
+					"Location Services Required",
+					"Please enable location services on your device to use this app.",
+					[
+						{
+							text: "Cancel",
+							onPress: () => {
+								setErrorMsg(
+									"Location services are not enabled. \n Close the app!"
+								);
+							},
+						},
+						{
+							text: "Open Settings",
+							onPress: () => {
+								Linking.openSettings();
+							},
+						},
+					]
+				);
+				return;
+			}
+			/// Others
 			let { status } = await Location.requestForegroundPermissionsAsync();
 			if (status !== "granted") {
 				setErrorMsg("Permission to access location was denied");
+				Alert.alert(errorMsg);
 				return;
 			}
 			let location = await Location.getCurrentPositionAsync({});
 			setLocation(location);
 			setButtonActivation(true);
-			setButtonText("Get Address");
+			latitude = location.coords.latitude;
+			longitude = location.coords.longitude;
+			{
+				handleClick();
+			}
+			// setButtonText("Get Address");
 		})();
 	}, []);
-
-	let text = "Waiting...";
-	if (errorMsg) {
-		Alert.alert(errorMsg);
-	} else if (location) {
-		// Alert.alert("Cooredinated Gotten");
-		//
-		latitude = location.coords.latitude;
-		longitude = location.coords.longitude;
-		text = JSON.stringify(location);
-	}
 
 	const handleClick = () => {
 		fetch(
@@ -59,6 +86,7 @@ export default function LocationSection() {
 				setUser(JSON.stringify(data));
 				setStreet(data.results[0].formatted);
 				setLga(data.results[0].components.county);
+				setTheLGA(lga);
 				setState(data.results[0].components.state);
 			})
 			.catch((error) => {
@@ -71,17 +99,17 @@ export default function LocationSection() {
 				<Text style={styles.blockHeading}>Location</Text>
 				<View style={{ flex: 1, justifyContent: "center" }}>
 					{(user && <Text style={styles.nonEmphasised}>{street}</Text>) || (
-						<Text style={styles.nonEmphasised}>Street</Text>
+						<Text style={styles.nonEmphasised}>Getting Street...</Text>
 					)}
 					{(user && <Text style={styles.emphsised}>{lga}</Text>) || (
-						<Text style={styles.emphsised}>LGA</Text>
+						<Text style={styles.emphsised}>Getting LGA...</Text>
 					)}
 					{(user && <Text style={styles.nonEmphasised}>{state}</Text>) || (
-						<Text style={styles.nonEmphasised}>State</Text>
+						<Text style={styles.nonEmphasised}>Getting State...</Text>
 					)}
 				</View>
 			</View>
-			<View style={{ flex: 0.2 }}>
+			{/* <View style={{ flex: 0.2 }}>
 				<Pressable
 					style={getIsFormValid() ? styles.buttonE : styles.buttonD}
 					onPress={handleClick}
@@ -89,7 +117,7 @@ export default function LocationSection() {
 				>
 					<Text style={styles.buttonText}>{buttonText}</Text>
 				</Pressable>
-			</View>
+			</View> */}
 		</View>
 	);
 }
