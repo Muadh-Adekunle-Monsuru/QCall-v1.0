@@ -95,6 +95,7 @@ export default function LocationSection() {
 	}, []);
 
 	const handleClick = async () => {
+<<<<<<< Updated upstream
 		try {
 			const response = await fetch(
 				`https://api.opencagedata.com/geocode/v1/json?q=${latitude},+${longitude}&key=f7e47292a87f479bb355f49e907cce10&language=en&pretty=1&no_annotations=1`
@@ -119,10 +120,25 @@ export default function LocationSection() {
 			Alert.alert("Error fetching data:", error.message);
 		}
 	};
+=======
+		const response = await fetch(
+			`https://api.opencagedata.com/geocode/v1/json?q=${latitude},+${longitude}&key=f7e47292a87f479bb355f49e907cce10&language=en&pretty=1&no_annotations=1`
+		);
+		const data = await response.json();
+	};
+	let text = "Waiting...";
+	if (errorMsg) {
+		Alert.alert(errorMsg);
+	} else if (location) {
+		latitude = location.coords.latitude;
+		longitude = location.coords.longitude;
+	}
+>>>>>>> Stashed changes
 
 	const fetchData = async () => {
 		try {
 			const response = await fetch(
+<<<<<<< Updated upstream
 				`https://sheetdb.io/api/v1/sc073hiofw97m/search?lganame=${lga}&sheet=data`
 			)
 				.then((response) => {
@@ -166,6 +182,108 @@ export default function LocationSection() {
 					>
 						<Text style={styles.buttonText}>{buttonText}</Text>
 					</Pressable>
+=======
+				`https://sheetdb.io/api/v1/sc073hiofw97m/search?lganame=oron&sheet=data`
+			);
+			const data = await response.json();
+			setResponseData(data);
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		}
+	};
+
+	return (
+		<View style={{ flex: 1 }}>
+			<View style={{ flex: 1 }}>
+				<View style={styles.container11}>
+					<View style={{ flex: 0.8 }}>
+						<Text style={styles.blockHeading}>Location</Text>
+						<View style={{ flex: 1, justifyContent: "center" }}>
+							{(user && <Text style={styles.nonEmphasised}>{street}</Text>) || (
+								<Text style={styles.nonEmphasised}>Getting Street...</Text>
+							)}
+							{(user && <Text style={styles.emphsised}>{lga}</Text>) || (
+								<Text style={styles.emphsised}>Getting LGA...</Text>
+							)}
+							{(user && <Text style={styles.nonEmphasised}>{state}</Text>) || (
+								<Text style={styles.nonEmphasised}>Getting State...</Text>
+							)}
+						</View>
+					</View>
+					<View style={{ flex: 0.2 }}>
+						<Pressable
+							style={getIsFormValid() ? styles.buttonE : styles.buttonD}
+							onPress={handleClick}
+							disabled={!getIsFormValid()}
+						>
+							<Text style={styles.buttonText}>{buttonText}</Text>
+						</Pressable>
+					</View>
+				</View>
+				<View style={styles.container2}>
+					<Text style={styles.blockHeading}>Emergency Type:</Text>
+					<View style={{ flex: 0.9, justifyContent: "space-evenly" }}>
+						{responseData && (
+							<View>
+								<Pressable
+									style={[
+										styles.pills,
+										{
+											backgroundColor: "#ffe5d9",
+											borderColor: "#f4acb7",
+										},
+									]}
+									onPress={() =>
+										Linking.openURL(
+											`tel:${JSON.stringify(responseData[0].fire)}`
+										)
+									}
+								>
+									<FontAwesome name="fire" size={24} color="black" />
+									<Text>Fire:</Text>
+									<Text>{responseData[0].fire}</Text>
+								</Pressable>
+								<Pressable
+									style={[
+										styles.pills,
+										{ backgroundColor: "#ccd5ae", borderColor: "#e9edc9" },
+									]}
+									onPress={() =>
+										Linking.openURL(
+											`tel:${JSON.stringify(responseData[0].medical)}`
+										)
+									}
+								>
+									<FontAwesome5 name="clinic-medical" size={24} color="black" />
+									<Text>Medical :</Text>
+									<Text> {responseData[0].medical}</Text>
+								</Pressable>
+								<Pressable
+									style={[
+										styles.pills,
+										{ backgroundColor: "#bde0fe", borderColor: "#a2d2ff" },
+									]}
+									onPress={() =>
+										Linking.openURL(
+											`tel:${JSON.stringify(responseData[0].police)}`
+										)
+									}
+								>
+									<MaterialCommunityIcons
+										name="police-badge"
+										size={24}
+										color="black"
+									/>
+									<Text>Police:</Text>
+									<Text>{responseData[0].police}</Text>
+								</Pressable>
+							</View>
+						)}
+					</View>
+					<View style={{ flex: 0.1 }}>
+						<Button title="Fetch Data" onPress={fetchData} />
+					</View>
+>>>>>>> Stashed changes
 				</View>
 			</View>
 			<View style={styles.container2}>
