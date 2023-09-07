@@ -28,7 +28,7 @@ export default function NumberSection({ thelga, setTheLGA }) {
 	};
 
 	return (
-		<View style={styles.container}>
+		<View style={styles.container2}>
 			<Text style={styles.blockHeading}>Emergency Type:</Text>
 			<View style={{ flex: 0.9, justifyContent: "space-evenly" }}>
 				{responseData && (
@@ -92,7 +92,7 @@ export default function NumberSection({ thelga, setTheLGA }) {
 }
 
 const styles = StyleSheet.create({
-	container: {
+	container2: {
 		flex: 0.6,
 		alignItems: "center",
 		// justifyContent: "center",
