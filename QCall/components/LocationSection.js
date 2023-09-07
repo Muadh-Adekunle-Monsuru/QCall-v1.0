@@ -6,10 +6,14 @@ import {
 	StyleSheet,
 	Pressable,
 	Alert,
+	Button,
+	Linking,
 } from "react-native";
 import * as Device from "expo-device";
 import * as Location from "expo-location";
-
+import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 var latitude = "";
 var longitude = "";
 export default function LocationSection() {
@@ -21,6 +25,7 @@ export default function LocationSection() {
 	const [state, setState] = useState(""); // Initialize street state
 	const [buttonActivation, setButtonActivation] = useState(false);
 	const [buttonText, setButtonText] = useState("Waiting For Coordinates");
+	const [responseData, setResponseData] = useState(null);
 
 	const getIsFormValid = () => {
 		return buttonActivation;
@@ -43,13 +48,20 @@ export default function LocationSection() {
 	if (errorMsg) {
 		Alert.alert(errorMsg);
 	} else if (location) {
-		// Alert.alert("Cooredinated Gotten");
-		//
 		latitude = location.coords.latitude;
 		longitude = location.coords.longitude;
-		text = JSON.stringify(location);
 	}
-
+	const fetchData = async () => {
+		try {
+			const response = await fetch(
+				`https://sheetdb.io/api/v1/sc073hiofw97m/search?lganame=oron&sheet=data`
+			);
+			const data = await response.json();
+			setResponseData(data);
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		}
+	};
 	const handleClick = () => {
 		fetch(
 			`https://api.opencagedata.com/geocode/v1/json?q=${latitude},+${longitude}&key=f7e47292a87f479bb355f49e907cce10&language=en&pretty=1&no_annotations=1`
@@ -60,45 +72,126 @@ export default function LocationSection() {
 				setStreet(data.results[0].formatted);
 				setLga(data.results[0].components.county);
 				setState(data.results[0].components.state);
+				{
+					fetchData();
+				}
 			})
 			.catch((error) => {
 				console.error("Error fetching data:", error);
 			});
 	};
+
 	return (
-		<View style={styles.container}>
-			<View style={{ flex: 0.8 }}>
-				<Text style={styles.blockHeading}>Location</Text>
-				<View style={{ flex: 1, justifyContent: "center" }}>
-					{(user && <Text style={styles.nonEmphasised}>{street}</Text>) || (
-						<Text style={styles.nonEmphasised}>Street</Text>
-					)}
-					{(user && <Text style={styles.emphsised}>{lga}</Text>) || (
-						<Text style={styles.emphsised}>LGA</Text>
-					)}
-					{(user && <Text style={styles.nonEmphasised}>{state}</Text>) || (
-						<Text style={styles.nonEmphasised}>State</Text>
-					)}
+		<View style={{ flex: 1 }}>
+			<View style={styles.container1}>
+				<View style={{ flex: 0.8 }}>
+					<Text style={styles.blockHeading}>Location</Text>
+					<View style={{ flex: 1, justifyContent: "center" }}>
+						{(user && <Text style={styles.nonEmphasised}>{street}</Text>) || (
+							<Text style={styles.nonEmphasised}>Street</Text>
+						)}
+						{(user && <Text style={styles.emphsised}>{lga}</Text>) || (
+							<Text style={styles.emphsised}>LGA</Text>
+						)}
+						{(user && <Text style={styles.nonEmphasised}>{state}</Text>) || (
+							<Text style={styles.nonEmphasised}>State</Text>
+						)}
+					</View>
+				</View>
+				<View style={{ flex: 0.2 }}>
+					<Pressable
+						style={getIsFormValid() ? styles.buttonE : styles.buttonD}
+						onPress={handleClick}
+						disabled={!getIsFormValid()}
+					>
+						<Text style={styles.buttonText}>{buttonText}</Text>
+					</Pressable>
 				</View>
 			</View>
-			<View style={{ flex: 0.2 }}>
-				<Pressable
-					style={getIsFormValid() ? styles.buttonE : styles.buttonD}
-					onPress={handleClick}
-					disabled={!getIsFormValid()}
-				>
-					<Text style={styles.buttonText}>{buttonText}</Text>
-				</Pressable>
+			<View style={styles.container2}>
+				<Text style={styles.blockHeading}>Emergency Type:</Text>
+				<View style={{ flex: 0.9, justifyContent: "space-evenly" }}>
+					{responseData && (
+						<View>
+							<Pressable
+								style={[
+									styles.pills,
+									{
+										backgroundColor: "#ffe5d9",
+										borderColor: "#f4acb7",
+									},
+								]}
+								onPress={() =>
+									Linking.openURL(`tel:${JSON.stringify(responseData[0].fire)}`)
+								}
+							>
+								<FontAwesome name="fire" size={24} color="black" />
+								<Text>Fire:</Text>
+								<Text>{responseData[0].fire}</Text>
+							</Pressable>
+							<Pressable
+								style={[
+									styles.pills,
+									{ backgroundColor: "#ccd5ae", borderColor: "#e9edc9" },
+								]}
+								onPress={() =>
+									Linking.openURL(
+										`tel:${JSON.stringify(responseData[0].medical)}`
+									)
+								}
+							>
+								<FontAwesome5 name="clinic-medical" size={24} color="black" />
+								<Text>Medical :</Text>
+								<Text> {responseData[0].medical}</Text>
+							</Pressable>
+							<Pressable
+								style={[
+									styles.pills,
+									{ backgroundColor: "#bde0fe", borderColor: "#a2d2ff" },
+								]}
+								onPress={() =>
+									Linking.openURL(
+										`tel:${JSON.stringify(responseData[0].police)}`
+									)
+								}
+							>
+								<MaterialCommunityIcons
+									name="police-badge"
+									size={24}
+									color="black"
+								/>
+								<Text>Police:</Text>
+								<Text>{responseData[0].police}</Text>
+							</Pressable>
+						</View>
+					)}
+				</View>
+				<View style={{ flex: 0.1 }}>
+					<Button title="Fetch Data" onPress={fetchData} />
+				</View>
 			</View>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: {
+	container1: {
 		flex: 0.4,
 		alignItems: "center",
 		justifyContent: "center",
+		paddingHorizontal: 25,
+		paddingVertical: 20,
+		backgroundColor: "#F5EBE0",
+		borderRadius: 50,
+		borderWidth: 1,
+		borderColor: "#D5BDAF",
+		margin: 10,
+		marginHorizontal: 20,
+	},
+	container2: {
+		flex: 0.6,
+		alignItems: "center",
+		// justifyContent: "center",
 		paddingHorizontal: 25,
 		paddingVertical: 20,
 		backgroundColor: "#F5EBE0",
@@ -155,5 +248,16 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 		fontSize: 18,
 		textAlign: "center",
+	},
+	pills: {
+		fontSize: 25,
+		borderRadius: 30,
+		paddingHorizontal: 95,
+		paddingVertical: 30,
+		borderWidth: 1,
+		marginVertical: 5,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-around",
 	},
 });
