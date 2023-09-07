@@ -72,24 +72,20 @@ export default function LocationSection() {
 				}
 				const getLocation = async () => {
 					console.log("Get location is called");
-					try {
-						const locationData = await Location.getCurrentPositionAsync({})
-							.then((response) => {
-								setLocation(response);
-							})
-							.then(() => {
-								console.log(location);
-								setLatitude(location.coords.latitude);
-								setLongitude(location.coords.longitude);
-								setButtonActivation(true);
-								setButtonText("Get Address");
-							})
-							.catch((error) => {
-								console.error("fetching data:", error);
-							});
-					} catch (error) {
-						console.error("Error getting location:", error);
-					}
+					const locationData = await Location.getCurrentPositionAsync({})
+						.then((response) => {
+							setLocation(locationData);
+						})
+						.then((data) => {
+							console.log(data);
+							setLatitude(data.coords.latitude);
+							setLongitude(data.coords.longitude);
+							setButtonActivation(true);
+							setButtonText("Get");
+						})
+						.catch((error) => {
+							console.error("fetching data:", error);
+						});
 				};
 				getLocation();
 			} catch (error) {
