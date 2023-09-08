@@ -26,8 +26,7 @@ export default function LocationSection() {
 	const [street, setStreet] = useState(""); // Initialize street state
 	const [lga, setLga] = useState(""); // Initialize street state
 	const [state, setState] = useState(""); // Initialize street state
-	const [latitude, setLatitude] = useState(null);
-	const [longitude, setLongitude] = useState(null);
+	const [buttonActivation, setButtonActivation] = useState(false);
 	const [buttonText, setButtonText] = useState("Waiting For Coordinates");
 
 	const getIsFormValid = () => {
@@ -35,62 +34,15 @@ export default function LocationSection() {
 	};
 	useEffect(() => {
 		(async () => {
-			try {
-				const hasLocationServicesEnabled =
-					await Location.hasServicesEnabledAsync();
-
-				if (!hasLocationServicesEnabled) {
-					Alert.alert(
-						"Location Services Required",
-						"Please enable location services on your device to use this app.",
-						[
-							{
-								text: "Cancel",
-								onPress: () => {
-									setErrorMsg(
-										"Location services are not enabled. \n Close the app!"
-									);
-								},
-							},
-							{
-								text: "Open Settings",
-								onPress: () => {
-									Linking.openSettings();
-								},
-							},
-						]
-					);
-					return;
-				}
-
-				const { status } = await Location.requestForegroundPermissionsAsync();
-
-				if (status !== "granted") {
-					setErrorMsg("Permission to access location was denied");
-					Alert.alert(errorMsg);
-					return;
-				}
-				const getLocation = async () => {
-					console.log("Get location is called");
-					const locationData = await Location.getCurrentPositionAsync({})
-						.then((response) => {
-							setLocation(locationData);
-						})
-						.then((data) => {
-							console.log(data);
-							setLatitude(data.coords.latitude);
-							setLongitude(data.coords.longitude);
-							setButtonActivation(true);
-							setButtonText("Get");
-						})
-						.catch((error) => {
-							console.error("fetching data:", error);
-						});
-				};
-				getLocation();
-			} catch (error) {
-				console.error("Error getting location:", error);
+			let { status } = await Location.requestForegroundPermissionsAsync();
+			if (status !== "granted") {
+				setErrorMsg("Permission to access location was denied");
+				return;
 			}
+			let location = await Location.getCurrentPositionAsync({});
+			setLocation(location);
+			setButtonActivation(true);
+			setButtonText("Get Address");
 		})();
 	}, []);
 
@@ -130,223 +82,52 @@ export default function LocationSection() {
 	if (errorMsg) {
 		Alert.alert(errorMsg);
 	} else if (location) {
+		// Alert.alert("Cooredinated Gotten");
+		//
 		latitude = location.coords.latitude;
 		longitude = location.coords.longitude;
+		text = JSON.stringify(location);
 	}
->>>>>>> Stashed changes
 
-	const fetchData = async () => {
-		try {
-			const response = await fetch(
-<<<<<<< Updated upstream
-				`https://sheetdb.io/api/v1/sc073hiofw97m/search?lganame=${lga}&sheet=data`
-			)
-				.then((response) => {
-					// Check if the response is successful (status code 200)
-					if (!response.ok) {
-						throw new Error("Network response was not ok");
-					}
-					// Parse the response JSON data
-					return response.json();
-				})
-				.then((data) => {
-					console.log(data);
-					setResponseData(data);
-				});
-		} catch (error) {
-			console.error("Error fetching contacts from database:", error);
-		}
+	const handleClick = () => {
+		fetch(
+			`https://api.opencagedata.com/geocode/v1/json?q=${latitude},+${longitude}&key=f7e47292a87f479bb355f49e907cce10&language=en&pretty=1&no_annotations=1`
+		)
+			.then((response) => response.json())
+			.then((data) => {
+				setUser(JSON.stringify(data));
+				setStreet(data.results[0].formatted);
+				setLga(data.results[0].components.county);
+				setState(data.results[0].components.state);
+			})
+			.catch((error) => {
+				console.error("Error fetching data:", error);
+			});
 	};
 	return (
-		<View style={{ flex: 1 }}>
-			<View style={styles.container1}>
-				<View style={{ flex: 0.8 }}>
-					<Text style={styles.blockHeading}>Location</Text>
-					<View style={{ flex: 1, justifyContent: "center" }}>
-						{(user && <Text style={styles.nonEmphasised}>{street}</Text>) || (
-							<Text style={styles.nonEmphasised}>Getting Street...</Text>
-						)}
-						{(user && <Text style={styles.emphsised}>{lga}</Text>) || (
-							<Text style={styles.emphsised}>Getting LGA...</Text>
-						)}
-						{(user && <Text style={styles.nonEmphasised}>{state}</Text>) || (
-							<Text style={styles.nonEmphasised}>Getting State...</Text>
-						)}
-					</View>
-				</View>
-				<View style={{ flex: 0.2 }}>
-					<Pressable
-						style={getIsFormValid() ? styles.buttonE : styles.buttonD}
-						onPress={handleClick}
-						disabled={!getIsFormValid()}
-					>
-						<Text style={styles.buttonText}>{buttonText}</Text>
-					</Pressable>
-=======
-				`https://sheetdb.io/api/v1/sc073hiofw97m/search?lganame=oron&sheet=data`
-			);
-			const data = await response.json();
-			setResponseData(data);
-		} catch (error) {
-			console.error("Error fetching data:", error);
-		}
-	};
-
-	return (
-		<View style={{ flex: 1 }}>
-			<View style={{ flex: 1 }}>
-				<View style={styles.container11}>
-					<View style={{ flex: 0.8 }}>
-						<Text style={styles.blockHeading}>Location</Text>
-						<View style={{ flex: 1, justifyContent: "center" }}>
-							{(user && <Text style={styles.nonEmphasised}>{street}</Text>) || (
-								<Text style={styles.nonEmphasised}>Getting Street...</Text>
-							)}
-							{(user && <Text style={styles.emphsised}>{lga}</Text>) || (
-								<Text style={styles.emphsised}>Getting LGA...</Text>
-							)}
-							{(user && <Text style={styles.nonEmphasised}>{state}</Text>) || (
-								<Text style={styles.nonEmphasised}>Getting State...</Text>
-							)}
-						</View>
-					</View>
-					<View style={{ flex: 0.2 }}>
-						<Pressable
-							style={getIsFormValid() ? styles.buttonE : styles.buttonD}
-							onPress={handleClick}
-							disabled={!getIsFormValid()}
-						>
-							<Text style={styles.buttonText}>{buttonText}</Text>
-						</Pressable>
-					</View>
-				</View>
-				<View style={styles.container2}>
-					<Text style={styles.blockHeading}>Emergency Type:</Text>
-					<View style={{ flex: 0.9, justifyContent: "space-evenly" }}>
-						{responseData && (
-							<View>
-								<Pressable
-									style={[
-										styles.pills,
-										{
-											backgroundColor: "#ffe5d9",
-											borderColor: "#f4acb7",
-										},
-									]}
-									onPress={() =>
-										Linking.openURL(
-											`tel:${JSON.stringify(responseData[0].fire)}`
-										)
-									}
-								>
-									<FontAwesome name="fire" size={24} color="black" />
-									<Text>Fire:</Text>
-									<Text>{responseData[0].fire}</Text>
-								</Pressable>
-								<Pressable
-									style={[
-										styles.pills,
-										{ backgroundColor: "#ccd5ae", borderColor: "#e9edc9" },
-									]}
-									onPress={() =>
-										Linking.openURL(
-											`tel:${JSON.stringify(responseData[0].medical)}`
-										)
-									}
-								>
-									<FontAwesome5 name="clinic-medical" size={24} color="black" />
-									<Text>Medical :</Text>
-									<Text> {responseData[0].medical}</Text>
-								</Pressable>
-								<Pressable
-									style={[
-										styles.pills,
-										{ backgroundColor: "#bde0fe", borderColor: "#a2d2ff" },
-									]}
-									onPress={() =>
-										Linking.openURL(
-											`tel:${JSON.stringify(responseData[0].police)}`
-										)
-									}
-								>
-									<MaterialCommunityIcons
-										name="police-badge"
-										size={24}
-										color="black"
-									/>
-									<Text>Police:</Text>
-									<Text>{responseData[0].police}</Text>
-								</Pressable>
-							</View>
-						)}
-					</View>
-					<View style={{ flex: 0.1 }}>
-						<Button title="Fetch Data" onPress={fetchData} />
-					</View>
->>>>>>> Stashed changes
-				</View>
-			</View>
-			<View style={styles.container2}>
-				<Text style={styles.blockHeading}>Emergency Type:</Text>
-				<View style={{ flex: 0.9, justifyContent: "space-evenly" }}>
-					{responseData && (
-						<View>
-							<Pressable
-								style={[
-									styles.pills,
-									{
-										backgroundColor: "#ffe5d9",
-										borderColor: "#f4acb7",
-									},
-								]}
-								onPress={() =>
-									Linking.openURL(`tel:${JSON.stringify(responseData[0].fire)}`)
-								}
-							>
-								<FontAwesome name="fire" size={24} color="black" />
-								<Text>Fire:</Text>
-								<Text>{responseData[0].fire}</Text>
-							</Pressable>
-							<Pressable
-								style={[
-									styles.pills,
-									{ backgroundColor: "#ccd5ae", borderColor: "#e9edc9" },
-								]}
-								onPress={() =>
-									Linking.openURL(
-										`tel:${JSON.stringify(responseData[0].medical)}`
-									)
-								}
-							>
-								<FontAwesome5 name="clinic-medical" size={24} color="black" />
-								<Text>Medical :</Text>
-								<Text> {responseData[0].medical}</Text>
-							</Pressable>
-							<Pressable
-								style={[
-									styles.pills,
-									{ backgroundColor: "#bde0fe", borderColor: "#a2d2ff" },
-								]}
-								onPress={() =>
-									Linking.openURL(
-										`tel:${JSON.stringify(responseData[0].police)}`
-									)
-								}
-							>
-								<MaterialCommunityIcons
-									name="police-badge"
-									size={24}
-									color="black"
-								/>
-								<Text>Police:</Text>
-								<Text>{responseData[0].police}</Text>
-							</Pressable>
-						</View>
+		<View style={styles.container}>
+			<View style={{ flex: 0.8 }}>
+				<Text style={styles.blockHeading}>Location</Text>
+				<View style={{ flex: 1, justifyContent: "center" }}>
+					{(user && <Text style={styles.nonEmphasised}>{street}</Text>) || (
+						<Text style={styles.nonEmphasised}>Street</Text>
+					)}
+					{(user && <Text style={styles.emphsised}>{lga}</Text>) || (
+						<Text style={styles.emphsised}>LGA</Text>
+					)}
+					{(user && <Text style={styles.nonEmphasised}>{state}</Text>) || (
+						<Text style={styles.nonEmphasised}>State</Text>
 					)}
 				</View>
-				<View style={{ flex: 0.1 }}>
-					<Button title="Show More +" onPress={handleClick} />
-				</View>
+			</View>
+			<View style={{ flex: 0.2 }}>
+				<Pressable
+					style={getIsFormValid() ? styles.buttonE : styles.buttonD}
+					onPress={handleClick}
+					disabled={!getIsFormValid()}
+				>
+					<Text style={styles.buttonText}>{buttonText}</Text>
+				</Pressable>
 			</View>
 		</View>
 	);
@@ -361,7 +142,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 20,
 		backgroundColor: "#F5EBE0",
 		borderRadius: 50,
-		borderWidth: 1,
+		borderWidth: 2,
 		borderColor: "#D5BDAF",
 		margin: 10,
 		marginHorizontal: 20,
@@ -382,7 +163,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontWeight: "300",
 	},
-	buttonE: {
+	button: {
 		alignItems: "center",
 		justifyContent: "center",
 		paddingVertical: 12,
@@ -400,7 +181,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 10,
 		borderRadius: 8,
 		elevation: 3,
-		backgroundColor: "gray",
+		backgroundColor: "#D5BDA9",
 	},
 	buttonText: {
 		fontSize: 16,
