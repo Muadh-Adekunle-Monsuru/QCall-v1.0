@@ -15,7 +15,8 @@ import * as Location from "expo-location";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
+var latitude = " ";
+var longitude = "";
 export default function LocationSection() {
 	const [location, setLocation] = useState(null);
 	const [buttonActivation, setButtonActivation] = useState(false);
@@ -26,7 +27,6 @@ export default function LocationSection() {
 	const [street, setStreet] = useState(""); // Initialize street state
 	const [lga, setLga] = useState(""); // Initialize street state
 	const [state, setState] = useState(""); // Initialize street state
-	const [buttonActivation, setButtonActivation] = useState(false);
 	const [buttonText, setButtonText] = useState("Waiting For Coordinates");
 
 	const getIsFormValid = () => {
@@ -45,9 +45,17 @@ export default function LocationSection() {
 			setButtonText("Get Address");
 		})();
 	}, []);
-
+	let text = "Waiting...";
+	if (errorMsg) {
+		Alert.alert(errorMsg);
+	} else if (location) {
+		// Alert.alert("Cooredinated Gotten");
+		//
+		latitude = location.coords.latitude;
+		longitude = location.coords.longitude;
+		text = JSON.stringify(location);
+	}
 	const handleClick = async () => {
-<<<<<<< Updated upstream
 		try {
 			const response = await fetch(
 				`https://api.opencagedata.com/geocode/v1/json?q=${latitude},+${longitude}&key=f7e47292a87f479bb355f49e907cce10&language=en&pretty=1&no_annotations=1`
@@ -72,40 +80,9 @@ export default function LocationSection() {
 			Alert.alert("Error fetching data:", error.message);
 		}
 	};
-=======
-		const response = await fetch(
-			`https://api.opencagedata.com/geocode/v1/json?q=${latitude},+${longitude}&key=f7e47292a87f479bb355f49e907cce10&language=en&pretty=1&no_annotations=1`
-		);
-		const data = await response.json();
-	};
-	let text = "Waiting...";
-	if (errorMsg) {
-		Alert.alert(errorMsg);
-	} else if (location) {
-		// Alert.alert("Cooredinated Gotten");
-		//
-		latitude = location.coords.latitude;
-		longitude = location.coords.longitude;
-		text = JSON.stringify(location);
-	}
 
-	const handleClick = () => {
-		fetch(
-			`https://api.opencagedata.com/geocode/v1/json?q=${latitude},+${longitude}&key=f7e47292a87f479bb355f49e907cce10&language=en&pretty=1&no_annotations=1`
-		)
-			.then((response) => response.json())
-			.then((data) => {
-				setUser(JSON.stringify(data));
-				setStreet(data.results[0].formatted);
-				setLga(data.results[0].components.county);
-				setState(data.results[0].components.state);
-			})
-			.catch((error) => {
-				console.error("Error fetching data:", error);
-			});
-	};
 	return (
-		<View style={styles.container}>
+		<View style={styles.container1}>
 			<View style={{ flex: 0.8 }}>
 				<Text style={styles.blockHeading}>Location</Text>
 				<View style={{ flex: 1, justifyContent: "center" }}>
