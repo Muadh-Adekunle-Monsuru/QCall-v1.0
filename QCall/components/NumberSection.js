@@ -27,6 +27,7 @@ export default function NumberSection({ thelga, setTheLGA }) {
 		}
 	};
 
+<<<<<<< HEAD
 	return (
 		<View style={styles.container2}>
 			<Text style={styles.blockHeading}>Emergency Type:</Text>
@@ -89,6 +90,10 @@ export default function NumberSection({ thelga, setTheLGA }) {
 			</View>
 		</View>
 	);
+=======
+export default function NumberSection() {
+	return <View style={styles.container}></View>;
+>>>>>>> parent of a43dd49 (button to get address disabled if user's coordinates cannot be determined)
 }
 
 const styles = StyleSheet.create({
@@ -100,11 +105,12 @@ const styles = StyleSheet.create({
 		paddingVertical: 20,
 		backgroundColor: "#F5EBE0",
 		borderRadius: 50,
-		borderWidth: 1,
+		borderWidth: 2,
 		borderColor: "#D5BDAF",
 		margin: 10,
 		marginHorizontal: 20,
 	},
+<<<<<<< HEAD
 	blockHeading: {
 		fontWeight: "bold",
 		fontSize: 35,
@@ -121,4 +127,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "space-around",
 	},
+=======
+>>>>>>> parent of a43dd49 (button to get address disabled if user's coordinates cannot be determined)
 });
