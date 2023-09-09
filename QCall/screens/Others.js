@@ -5,7 +5,7 @@ import LocationSection from "../components/LocationSection";
 export default function Others() {
 	return (
 		<View style={styles.container}>
-			<Text>More Contacts</Text>
+			<Text>Other Contacts</Text>
 		</View>
 	);
 }

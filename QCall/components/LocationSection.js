@@ -92,7 +92,7 @@ export default function LocationSection({ navigation }) {
 	};
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={{ flex: 1, backgroundColor: "#F5F5Ff" }}>
 			<View style={styles.container1}>
 				<Text style={styles.blockHeading}>Location</Text>
 				<View style={{ flex: 1, justifyContent: "center" }}>
@@ -125,7 +125,6 @@ export default function LocationSection({ navigation }) {
 								styles.pills,
 								{
 									backgroundColor: "#ffe5d9",
-									borderColor: "#f4acb7",
 								},
 							]}
 						>
@@ -143,12 +142,7 @@ export default function LocationSection({ navigation }) {
 								</Text>
 							)}
 						</Pressable>
-						<Pressable
-							style={[
-								styles.pills,
-								{ backgroundColor: "#ccd5ae", borderColor: "#e9edc9" },
-							]}
-						>
+						<Pressable style={[styles.pills, { backgroundColor: "#ccd5ae" }]}>
 							<FontAwesome5 name="clinic-medical" size={25} color="black" />
 							<Text style={{ fontSize: 25 }}>Medical :</Text>
 							{responseData && (
@@ -163,12 +157,7 @@ export default function LocationSection({ navigation }) {
 								</Text>
 							)}
 						</Pressable>
-						<Pressable
-							style={[
-								styles.pills,
-								{ backgroundColor: "#bde0fe", borderColor: "#a2d2ff" },
-							]}
-						>
+						<Pressable style={[styles.pills, { backgroundColor: "#bde0fe" }]}>
 							<MaterialCommunityIcons
 								name="police-badge"
 								size={25}
@@ -177,7 +166,6 @@ export default function LocationSection({ navigation }) {
 							<Text style={{ fontSize: 25 }}>Police:</Text>
 							{responseData && (
 								<Text
-									style={{ fontSize: 25 }}
 									onPress={() =>
 										Linking.openURL(
 											`tel:${JSON.stringify(responseData[0].police)}`
@@ -191,10 +179,21 @@ export default function LocationSection({ navigation }) {
 					</View>
 				</View>
 				<View style={{ flex: 0.1 }}>
-					<Button
-						title="Show More +"
-						onPress={() => navigation.navigate("More Emergencies")}
-					/>
+					<Pressable
+						onPress={() =>
+							navigation.push("More Emergencies", { lga: `${lga}` })
+						}
+					>
+						<Text
+							style={{
+								fontWeight: "bold",
+								color: "blue",
+								fontSize: 20,
+							}}
+						>
+							Show More +
+						</Text>
+					</Pressable>
 				</View>
 			</View>
 		</View>
@@ -208,10 +207,8 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		paddingHorizontal: 25,
 		paddingVertical: 20,
-		backgroundColor: "#F5F5F5",
+		backgroundColor: "white",
 		borderRadius: 50,
-		borderWidth: 2,
-		borderColor: "#F5F5Ff",
 		margin: 10,
 		marginHorizontal: 20,
 	},
@@ -280,10 +277,8 @@ const styles = StyleSheet.create({
 		// justifyContent: "center",
 		paddingHorizontal: 25,
 		paddingVertical: 20,
-		backgroundColor: "#F5F5F5",
+		backgroundColor: "white",
 		borderRadius: 50,
-		borderWidth: 1,
-		borderColor: "#F5F5Ff",
 		margin: 10,
 		marginHorizontal: 20,
 	},
@@ -292,7 +287,6 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		paddingHorizontal: 75,
 		paddingVertical: 20,
-		borderWidth: 1,
 		marginVertical: 5,
 		flexDirection: "row",
 		alignItems: "center",

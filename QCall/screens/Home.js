@@ -3,6 +3,7 @@ import { Platform, Text, View, StyleSheet } from "react-native";
 import LocationSection from "../components/LocationSection";
 import MoreEm from "../components/MoreEm";
 import { createStackNavigator } from "@react-navigation/stack";
+import "react-native-gesture-handler";
 const Stack = createStackNavigator();
 export default function Home() {
 	return (
@@ -14,7 +15,11 @@ export default function Home() {
 					headerStyle: { backgroundColor: "white" },
 				}}
 			>
-				<Stack.Screen name="Home" component={LocationSection} />
+				<Stack.Screen
+					name="Home"
+					component={LocationSection}
+					options={{ headerShown: false }}
+				/>
 				<Stack.Screen name="More Emergencies" component={MoreEm} />
 			</Stack.Navigator>
 		</View>
