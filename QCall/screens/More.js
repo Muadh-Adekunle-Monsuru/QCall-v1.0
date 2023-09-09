@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Platform, Text, View, StyleSheet } from "react-native";
 import LocationSection from "../components/LocationSection";
 
-export default function Home({ navigation }) {
+export default function More() {
 	return (
 		<View style={styles.container}>
-			<LocationSection navigation={navigation} />
+			<Text>More Contacts</Text>
 		</View>
 	);
 }

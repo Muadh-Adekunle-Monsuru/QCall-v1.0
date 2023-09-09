@@ -17,7 +17,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 var latitude = " ";
 var longitude = "";
-export default function LocationSection() {
+export default function LocationSection({ navigation }) {
 	const [location, setLocation] = useState(null);
 	const [buttonActivation, setButtonActivation] = useState(false);
 	const [locationEnabled, setLocationEnabled] = useState(false);
@@ -28,7 +28,17 @@ export default function LocationSection() {
 	const [lga, setLga] = useState(""); // Initialize street state
 	const [state, setState] = useState(""); // Initialize street state
 	const [buttonText, setButtonText] = useState("Waiting For Coordinates");
-
+	const fetchData = async () => {
+		try {
+			const response = await fetch(
+				`https://sheetdb.io/api/v1/sc073hiofw97m/search?lganame=oron&sheet=data`
+			);
+			const data = await response.json();
+			setResponseData(data);
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		}
+	};
 	const getIsFormValid = () => {
 		return buttonActivation;
 	};
@@ -82,8 +92,8 @@ export default function LocationSection() {
 	};
 
 	return (
-		<View style={styles.container1}>
-			<View style={{ flex: 0.8 }}>
+		<View style={{ flex: 1 }}>
+			<View style={styles.container1}>
 				<Text style={styles.blockHeading}>Location</Text>
 				<View style={{ flex: 1, justifyContent: "center" }}>
 					{(user && <Text style={styles.nonEmphasised}>{street}</Text>) || (
@@ -96,15 +106,96 @@ export default function LocationSection() {
 						<Text style={styles.nonEmphasised}>State</Text>
 					)}
 				</View>
+				<View style={{ flex: 0.2 }}>
+					<Pressable
+						style={getIsFormValid() ? styles.buttonE : styles.buttonD}
+						onPress={handleClick}
+						disabled={!getIsFormValid()}
+					>
+						<Text style={styles.buttonText}>{buttonText}</Text>
+					</Pressable>
+				</View>
 			</View>
-			<View style={{ flex: 0.2 }}>
-				<Pressable
-					style={getIsFormValid() ? styles.buttonE : styles.buttonD}
-					onPress={handleClick}
-					disabled={!getIsFormValid()}
-				>
-					<Text style={styles.buttonText}>{buttonText}</Text>
-				</Pressable>
+			<View style={styles.container2}>
+				<Text style={styles.blockHeading}>Emergency Type:</Text>
+				<View style={{ flex: 0.9, justifyContent: "space-evenly" }}>
+					<View>
+						<Pressable
+							style={[
+								styles.pills,
+								{
+									backgroundColor: "#ffe5d9",
+									borderColor: "#f4acb7",
+								},
+							]}
+						>
+							<FontAwesome name="fire" size={25} color="black" />
+							<Text style={{ fontSize: 25 }}>Fire:</Text>
+							{responseData && (
+								<Text
+									onPress={() =>
+										Linking.openURL(
+											`tel:${JSON.stringify(responseData[0].fire)}`
+										)
+									}
+								>
+									{responseData[0].fire}
+								</Text>
+							)}
+						</Pressable>
+						<Pressable
+							style={[
+								styles.pills,
+								{ backgroundColor: "#ccd5ae", borderColor: "#e9edc9" },
+							]}
+						>
+							<FontAwesome5 name="clinic-medical" size={25} color="black" />
+							<Text style={{ fontSize: 25 }}>Medical :</Text>
+							{responseData && (
+								<Text
+									onPress={() =>
+										Linking.openURL(
+											`tel:${JSON.stringify(responseData[0].medical)}`
+										)
+									}
+								>
+									{responseData[0].medical}
+								</Text>
+							)}
+						</Pressable>
+						<Pressable
+							style={[
+								styles.pills,
+								{ backgroundColor: "#bde0fe", borderColor: "#a2d2ff" },
+							]}
+						>
+							<MaterialCommunityIcons
+								name="police-badge"
+								size={25}
+								color="black"
+							/>
+							<Text style={{ fontSize: 25 }}>Police:</Text>
+							{responseData && (
+								<Text
+									style={{ fontSize: 25 }}
+									onPress={() =>
+										Linking.openURL(
+											`tel:${JSON.stringify(responseData[0].police)}`
+										)
+									}
+								>
+									{responseData[0].police}
+								</Text>
+							)}
+						</Pressable>
+					</View>
+				</View>
+				<View style={{ flex: 0.1 }}>
+					<Button
+						title="Show More +"
+						onPress={() => navigation.navigate("Others")}
+					/>
+				</View>
 			</View>
 		</View>
 	);
@@ -117,10 +208,10 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		paddingHorizontal: 25,
 		paddingVertical: 20,
-		backgroundColor: "#F5EBE0",
+		backgroundColor: "#F5F5F5",
 		borderRadius: 50,
 		borderWidth: 2,
-		borderColor: "#D5BDAF",
+		borderColor: "#F5F5Ff",
 		margin: 10,
 		marginHorizontal: 20,
 	},
@@ -150,7 +241,8 @@ const styles = StyleSheet.create({
 		elevation: 3,
 		backgroundColor: "#D5BDA9",
 	},
-	buttonD: {
+
+	buttonE: {
 		alignItems: "center",
 		justifyContent: "center",
 		paddingVertical: 12,
@@ -159,6 +251,16 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		elevation: 3,
 		backgroundColor: "#D5BDA9",
+	},
+	buttonD: {
+		alignItems: "center",
+		justifyContent: "center",
+		paddingVertical: 12,
+		paddingHorizontal: 92,
+		marginHorizontal: 10,
+		borderRadius: 8,
+		elevation: 3,
+		backgroundColor: "gray",
 	},
 	buttonText: {
 		fontSize: 16,
@@ -173,27 +275,27 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	container2: {
-		flex: 0.6,
+		flex: 0.55,
 		alignItems: "center",
 		// justifyContent: "center",
 		paddingHorizontal: 25,
 		paddingVertical: 20,
-		backgroundColor: "#F5EBE0",
+		backgroundColor: "#F5F5F5",
 		borderRadius: 50,
 		borderWidth: 1,
-		borderColor: "#D5BDAF",
+		borderColor: "#F5F5Ff",
 		margin: 10,
 		marginHorizontal: 20,
 	},
 	pills: {
 		fontSize: 25,
 		borderRadius: 30,
-		paddingHorizontal: 95,
-		paddingVertical: 30,
+		paddingHorizontal: 75,
+		paddingVertical: 20,
 		borderWidth: 1,
 		marginVertical: 5,
 		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "space-around",
+		justifyContent: "space-evenly",
 	},
 });
