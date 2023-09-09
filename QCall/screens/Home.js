@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Platform, Text, View, StyleSheet } from "react-native";
 import LocationSection from "../components/LocationSection";
-
-export default function Home({ navigation }) {
+import MoreEm from "../components/MoreEm";
+import { createStackNavigator } from "@react-navigation/stack";
+const Stack = createStackNavigator();
+export default function Home() {
 	return (
 		<View style={styles.container}>
-			<LocationSection navigation={navigation} />
+			{/* <LocationSection navigation={navigation} /> */}
+			<Stack.Navigator
+				screenOptions={{
+					headerTitleAlign: "center",
+					headerStyle: { backgroundColor: "white" },
+				}}
+			>
+				<Stack.Screen name="Home" component={LocationSection} />
+				<Stack.Screen name="More Emergencies" component={MoreEm} />
+			</Stack.Navigator>
 		</View>
 	);
 }

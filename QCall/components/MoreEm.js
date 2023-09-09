@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Platform, Text, View, StyleSheet } from "react-native";
-import LocationSection from "../components/LocationSection";
+import LocationSection from "./LocationSection";
 
-export default function More() {
+export default function MoreEm() {
 	return (
 		<View style={styles.container}>
 			<Text>More Contacts</Text>

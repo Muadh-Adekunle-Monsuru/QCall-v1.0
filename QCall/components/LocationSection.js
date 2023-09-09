@@ -193,7 +193,7 @@ export default function LocationSection({ navigation }) {
 				<View style={{ flex: 0.1 }}>
 					<Button
 						title="Show More +"
-						onPress={() => navigation.navigate("Others")}
+						onPress={() => navigation.navigate("More Emergencies")}
 					/>
 				</View>
 			</View>
