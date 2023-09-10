@@ -15,8 +15,11 @@ import * as Location from "expo-location";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import axios from "axios";
+
 var latitude = " ";
 var longitude = "";
+var myResponse;
 export default function LocationSection({ navigation }) {
 	const [location, setLocation] = useState(null);
 	const [buttonActivation, setButtonActivation] = useState(false);
@@ -28,17 +31,7 @@ export default function LocationSection({ navigation }) {
 	const [lga, setLga] = useState(""); // Initialize street state
 	const [state, setState] = useState(""); // Initialize street state
 	const [buttonText, setButtonText] = useState("Waiting For Coordinates");
-	const fetchData = async () => {
-		try {
-			const response = await fetch(
-				`https://sheetdb.io/api/v1/sc073hiofw97m/search?lganame=oron&sheet=data`
-			);
-			const data = await response.json();
-			setResponseData(data);
-		} catch (error) {
-			console.error("Error fetching data:", error);
-		}
-	};
+
 	const getIsFormValid = () => {
 		return buttonActivation;
 	};
@@ -78,9 +71,8 @@ export default function LocationSection({ navigation }) {
 				setLga(data.results[0].components.county);
 				setState(data.results[0].components.state);
 				{
-					fetchData();
+					fetchData(data.results[0].components.county);
 				}
-				// Call the next function here, e.g., fetchData();
 			} else {
 				console.error("Error fetching data:", data);
 				Alert.alert("Error fetching data:", data);
@@ -91,6 +83,21 @@ export default function LocationSection({ navigation }) {
 		}
 	};
 
+	const fetchData = (prop) => {
+		console.log(prop);
+		let encodedLGA = encodeURIComponent(prop); // Encode spaces as %20
+		console.log(encodedLGA);
+		axios
+			.get(
+				`https://sheetdb.io/api/v1/sc073hiofw97m/search?lganame=${encodedLGA}&sheet=data`
+			)
+			.then((response) => {
+				setResponseData(response.data);
+			})
+			.catch((error) => {
+				console.error("Error fetching data:", error);
+			});
+	};
 	return (
 		<View style={{ flex: 1, backgroundColor: "#F5F5Ff" }}>
 			<View style={styles.container1}>
@@ -181,7 +188,9 @@ export default function LocationSection({ navigation }) {
 				<View style={{ flex: 0.1 }}>
 					<Pressable
 						onPress={() =>
-							navigation.push("More Emergencies", { lga: `${lga}` })
+							navigation.push("More Emergencies", {
+								data: { responseData },
+							})
 						}
 					>
 						<Text
