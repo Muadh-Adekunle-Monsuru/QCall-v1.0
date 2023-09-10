@@ -16,14 +16,14 @@ export default function MoreEm(props) {
 	).slice(6);
 	return (
 		<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-			<View>
+			<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
 				{objectValuesArray.map(([key, value], index) => (
 					<View key={index}>
 						<Pressable
 							style={styles.pills}
 							onPress={() => Linking.openURL(`tel:${value}`)}
 						>
-							<Text key={index}>
+							<Text key={index} style={{ fontSize: 20 }}>
 								{key}: {value}
 							</Text>
 						</Pressable>
@@ -40,10 +40,10 @@ const styles = StyleSheet.create({
 		backgroundColor: "white",
 	},
 	pills: {
-		fontSize: 25,
+		fontSize: 35,
 		borderRadius: 30,
 		paddingHorizontal: 75,
-		paddingVertical: 20,
+		paddingVertical: 30,
 		marginVertical: 5,
 		flexDirection: "row",
 		alignItems: "center",
