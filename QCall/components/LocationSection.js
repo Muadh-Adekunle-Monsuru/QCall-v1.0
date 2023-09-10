@@ -31,9 +31,12 @@ export default function LocationSection({ navigation }) {
 	const [lga, setLga] = useState(""); // Initialize street state
 	const [state, setState] = useState(""); // Initialize street state
 	const [buttonText, setButtonText] = useState("Waiting For Coordinates");
-
+	const [showMore, setShowMore] = useState(false);
 	const getIsFormValid = () => {
 		return buttonActivation;
+	};
+	const isShowMoreValid = () => {
+		return showMore;
 	};
 	useEffect(() => {
 		(async () => {
@@ -79,20 +82,19 @@ export default function LocationSection({ navigation }) {
 			}
 		} catch (error) {
 			console.error("Error fetching data:", error);
-			Alert.alert("Error fetching data:", error.message);
+			Alert.alert("Error fetching data", error.message);
 		}
 	};
 
 	const fetchData = (prop) => {
-		console.log(prop);
 		let encodedLGA = encodeURIComponent(prop); // Encode spaces as %20
-		console.log(encodedLGA);
 		axios
 			.get(
 				`https://sheetdb.io/api/v1/sc073hiofw97m/search?lganame=${encodedLGA}&sheet=data`
 			)
 			.then((response) => {
 				setResponseData(response.data);
+				setShowMore(true);
 			})
 			.catch((error) => {
 				console.error("Error fetching data:", error);
@@ -192,13 +194,22 @@ export default function LocationSection({ navigation }) {
 								data: { responseData },
 							})
 						}
+						disabled={!isShowMoreValid()}
 					>
 						<Text
-							style={{
-								fontWeight: "bold",
-								color: "blue",
-								fontSize: 20,
-							}}
+							style={
+								isShowMoreValid()
+									? {
+											fontWeight: "bold",
+											color: "blue",
+											fontSize: 20,
+									  }
+									: {
+											fontWeight: "bold",
+											color: "gray",
+											fontSize: 20,
+									  }
+							}
 						>
 							Show More +
 						</Text>

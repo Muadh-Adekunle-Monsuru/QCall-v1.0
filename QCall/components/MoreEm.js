@@ -18,7 +18,7 @@ export default function MoreEm(props) {
 		<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
 			<View>
 				{objectValuesArray.map(([key, value], index) => (
-					<View>
+					<View key={index}>
 						<Pressable
 							style={styles.pills}
 							onPress={() => Linking.openURL(`tel:${value}`)}
