@@ -16,6 +16,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 var latitude = " ";
 var longitude = "";
@@ -103,118 +104,176 @@ export default function LocationSection({ navigation }) {
 	return (
 		<View style={{ flex: 1, backgroundColor: "#F5F5Ff" }}>
 			<View style={styles.container1}>
-				<Text style={styles.blockHeading}>Location</Text>
-				<View style={{ flex: 1, justifyContent: "center" }}>
-					{(user && <Text style={styles.nonEmphasised}>{street}</Text>) || (
-						<Text style={styles.nonEmphasised}>Street</Text>
-					)}
-					{(user && <Text style={styles.emphsised}>{lga}</Text>) || (
-						<Text style={styles.emphsised}>LGA</Text>
-					)}
-					{(user && <Text style={styles.nonEmphasised}>{state}</Text>) || (
-						<Text style={styles.nonEmphasised}>State</Text>
-					)}
-				</View>
-				<View style={{ flex: 0.2 }}>
-					<Pressable
-						style={getIsFormValid() ? styles.buttonE : styles.buttonD}
-						onPress={handleClick}
-						disabled={!getIsFormValid()}
+				<View
+					style={{
+						flex: 1,
+						justifyContent: "space-evenly",
+					}}
+				>
+					<Text
+						numberOfLines={1}
+						adjustsFontSizeToFit
+						style={styles.blockHeading}
 					>
-						<Text style={styles.buttonText}>{buttonText}</Text>
-					</Pressable>
+						Location
+					</Text>
+					{(user && (
+						<Text
+							numberOfLines={1}
+							adjustsFontSizeToFit
+							style={styles.nonEmphasised}
+						>
+							{street}
+						</Text>
+					)) || (
+						<Text
+							numberOfLines={1}
+							adjustsFontSizeToFit
+							style={styles.nonEmphasised}
+						>
+							Street
+						</Text>
+					)}
+					{(user && (
+						<Text
+							numberOfLines={1}
+							adjustsFontSizeToFit
+							style={styles.emphsised}
+						>
+							{lga}
+						</Text>
+					)) || (
+						<Text
+							numberOfLines={1}
+							adjustsFontSizeToFit
+							style={styles.emphsised}
+						>
+							LGA
+						</Text>
+					)}
+					{(user && (
+						<Text
+							numberOfLines={1}
+							adjustsFontSizeToFit
+							style={styles.nonEmphasised}
+						>
+							{state}
+						</Text>
+					)) || (
+						<Text
+							numberOfLines={1}
+							adjustsFontSizeToFit
+							style={styles.nonEmphasised}
+						>
+							State
+						</Text>
+					)}
 				</View>
+
+				<Pressable
+					style={getIsFormValid() ? styles.buttonE : styles.buttonD}
+					onPress={handleClick}
+					disabled={!getIsFormValid()}
+				>
+					<Text
+						numberOfLines={1}
+						adjustsFontSizeToFit
+						style={styles.buttonText}
+					>
+						{buttonText}
+					</Text>
+				</Pressable>
 			</View>
 			<View style={styles.container2}>
-				<Text style={styles.blockHeading}>Emergency Type:</Text>
-				<View style={{ flex: 0.9, justifyContent: "space-evenly" }}>
-					<View>
-						<Pressable
-							style={[
-								styles.pills,
-								{
-									backgroundColor: "#ffe5d9",
-								},
-							]}
-						>
-							<FontAwesome name="fire" size={25} color="black" />
-							<Text style={{ fontSize: 25 }}>Fire:</Text>
-							{responseData && (
-								<Text
-									onPress={() =>
-										Linking.openURL(
-											`tel:${JSON.stringify(responseData[0].fire)}`
-										)
-									}
-								>
-									{responseData[0].fire}
-								</Text>
-							)}
-						</Pressable>
-						<Pressable style={[styles.pills, { backgroundColor: "#ccd5ae" }]}>
-							<FontAwesome5 name="clinic-medical" size={25} color="black" />
-							<Text style={{ fontSize: 25 }}>Medical :</Text>
-							{responseData && (
-								<Text
-									onPress={() =>
-										Linking.openURL(
-											`tel:${JSON.stringify(responseData[0].medical)}`
-										)
-									}
-								>
-									{responseData[0].medical}
-								</Text>
-							)}
-						</Pressable>
-						<Pressable style={[styles.pills, { backgroundColor: "#bde0fe" }]}>
-							<MaterialCommunityIcons
-								name="police-badge"
-								size={25}
-								color="black"
-							/>
-							<Text style={{ fontSize: 25 }}>Police:</Text>
-							{responseData && (
-								<Text
-									onPress={() =>
-										Linking.openURL(
-											`tel:${JSON.stringify(responseData[0].police)}`
-										)
-									}
-								>
-									{responseData[0].police}
-								</Text>
-							)}
-						</Pressable>
-					</View>
-				</View>
-				<View style={{ flex: 0.1 }}>
-					<Pressable
-						onPress={() =>
-							navigation.push("More Emergencies", {
-								data: { responseData },
-							})
-						}
-						disabled={!isShowMoreValid()}
-					>
+				<Text
+					numberOfLines={1}
+					adjustsFontSizeToFit
+					style={styles.blockHeading}
+				>
+					Emergency Type:
+				</Text>
+				<Pressable
+					style={[
+						styles.pills,
+						{
+							backgroundColor: "#ffe5d9",
+						},
+					]}
+				>
+					<FontAwesome name="fire" size={25} color="black" />
+					<Text numberOfLines={1} adjustsFontSizeToFit style={{ fontSize: 25 }}>
+						Fire:
+					</Text>
+					{responseData && (
 						<Text
-							style={
-								isShowMoreValid()
-									? {
-											fontWeight: "bold",
-											color: "blue",
-											fontSize: 20,
-									  }
-									: {
-											fontWeight: "bold",
-											color: "gray",
-											fontSize: 20,
-									  }
+							numberOfLines={1}
+							adjustsFontSizeToFit
+							onPress={() =>
+								Linking.openURL(`tel:${JSON.stringify(responseData[0].fire)}`)
 							}
 						>
-							Show More +
+							{responseData[0].fire}
 						</Text>
-					</Pressable>
-				</View>
+					)}
+				</Pressable>
+				<Pressable style={[styles.pills, { backgroundColor: "#ccd5ae" }]}>
+					<FontAwesome5 name="clinic-medical" size={25} color="black" />
+					<Text style={{ fontSize: 25 }}>Medical :</Text>
+					{responseData && (
+						<Text
+							numberOfLines={1}
+							adjustsFontSizeToFit
+							onPress={() =>
+								Linking.openURL(
+									`tel:${JSON.stringify(responseData[0].medical)}`
+								)
+							}
+						>
+							{responseData[0].medical}
+						</Text>
+					)}
+				</Pressable>
+				<Pressable style={[styles.pills, { backgroundColor: "#bde0fe" }]}>
+					<MaterialCommunityIcons name="police-badge" size={25} color="black" />
+					<Text style={{ fontSize: 25 }}>Police:</Text>
+					{responseData && (
+						<Text
+							onPress={() =>
+								Linking.openURL(`tel:${JSON.stringify(responseData[0].police)}`)
+							}
+						>
+							{responseData[0].police}
+						</Text>
+					)}
+				</Pressable>
+				<Pressable
+					onPress={() =>
+						navigation.push("More Emergencies", {
+							data: { responseData },
+						})
+					}
+					disabled={!isShowMoreValid()}
+				>
+					<Text
+						numberOfLines={1}
+						adjustsFontSizeToFit
+						style={
+							isShowMoreValid()
+								? {
+										fontWeight: "bold",
+										color: "blue",
+										fontSize: 20,
+								  }
+								: {
+										fontWeight: "bold",
+										color: "gray",
+										fontSize: 20,
+								  }
+						}
+					>
+						Show More +
+					</Text>
+				</Pressable>
 			</View>
 		</View>
 	);
@@ -238,12 +297,10 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	nonEmphasised: {
-		margin: 10,
 		fontSize: 15,
 		textAlign: "center",
 	},
 	emphsised: {
-		margin: 5,
 		fontSize: 70,
 		textAlign: "center",
 		fontWeight: "300",
@@ -292,9 +349,9 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	container2: {
-		flex: 0.55,
+		flex: 0.6,
 		alignItems: "center",
-		// justifyContent: "center",
+		justifyContent: "space-evenly",
 		paddingHorizontal: 25,
 		paddingVertical: 20,
 		backgroundColor: "white",
@@ -303,10 +360,10 @@ const styles = StyleSheet.create({
 		marginHorizontal: 20,
 	},
 	pills: {
+		width: "90%",
+		height: "15%",
 		fontSize: 25,
 		borderRadius: 30,
-		paddingHorizontal: 75,
-		paddingVertical: 20,
 		marginVertical: 5,
 		flexDirection: "row",
 		alignItems: "center",

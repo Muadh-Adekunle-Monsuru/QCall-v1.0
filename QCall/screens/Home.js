@@ -15,11 +15,7 @@ export default function Home() {
 					headerStyle: { backgroundColor: "white" },
 				}}
 			>
-				<Stack.Screen
-					name="Home"
-					component={LocationSection}
-					options={{ headerShown: false }}
-				/>
+				<Stack.Screen name="Home" component={LocationSection} />
 				<Stack.Screen name="More Emergencies" component={MoreEm} />
 			</Stack.Navigator>
 		</View>

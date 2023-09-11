@@ -7,6 +7,7 @@ import {
 	Button,
 	Pressable,
 	Linking,
+	ScrollView,
 } from "react-native";
 import LocationSection from "./LocationSection";
 
@@ -15,15 +16,28 @@ export default function MoreEm(props) {
 		props.route.params.data.responseData[0]
 	).slice(6);
 	return (
-		<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-			<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+		<View
+			style={{ flex: 1, alignItems: "center", justifyContent: "space-evenly" }}
+		>
+			<View
+				style={{
+					flex: 1,
+					alignItems: "center",
+					justifyContent: "space-evenly",
+				}}
+			>
 				{objectValuesArray.map(([key, value], index) => (
 					<View key={index}>
 						<Pressable
 							style={styles.pills}
 							onPress={() => Linking.openURL(`tel:${value}`)}
 						>
-							<Text key={index} style={{ fontSize: 20 }}>
+							<Text
+								numberOfLines={1}
+								adjustsFontSizeToFit
+								key={index}
+								style={{ fontSize: 20 }}
+							>
 								{key}: {value}
 							</Text>
 						</Pressable>
