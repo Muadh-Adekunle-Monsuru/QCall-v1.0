@@ -275,13 +275,22 @@ export default function LocationSection({ navigation }) {
 					</Text>
 				</Pressable>
 			</View>
+			<Pressable
+				style={isShowMoreValid() ? styles.buttonE : styles.buttonD}
+				onPress={() => navigation.navigate("Other Contacts", { lga: { lga } })}
+				disabled={!isShowMoreValid()}
+			>
+				<Text numberOfLines={1} adjustsFontSizeToFit style={styles.buttonText}>
+					Other Contacts
+				</Text>
+			</Pressable>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
 	container1: {
-		flex: 0.4,
+		flex: 0.45,
 		alignItems: "center",
 		justifyContent: "center",
 		paddingHorizontal: 25,
@@ -349,7 +358,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	container2: {
-		flex: 0.6,
+		flex: 0.5,
 		alignItems: "center",
 		justifyContent: "space-evenly",
 		paddingHorizontal: 25,
