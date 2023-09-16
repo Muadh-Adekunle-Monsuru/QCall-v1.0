@@ -39,6 +39,7 @@ export default function LocationSection({ navigation }) {
 	const isShowMoreValid = () => {
 		return showMore;
 	};
+
 	useEffect(() => {
 		(async () => {
 			let { status } = await Location.requestForegroundPermissionsAsync();
