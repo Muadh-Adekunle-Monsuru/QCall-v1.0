@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
 	Platform,
 	Text,
@@ -8,22 +8,22 @@ import {
 	Pressable,
 	Linking,
 	ScrollView,
-} from "react-native";
-import LocationSection from "./LocationSection";
+} from 'react-native';
+import LocationSection from './LocationSection';
 
 export default function MoreEm(props) {
 	const objectValuesArray = Object.entries(
-		props.route.params.data.responseData[0]
-	).slice(6);
+		props.route.params.data.responseData
+	);
 	return (
 		<View
-			style={{ flex: 1, alignItems: "center", justifyContent: "space-evenly" }}
+			style={{ flex: 1, alignItems: 'center', justifyContent: 'space-evenly' }}
 		>
 			<View
 				style={{
 					flex: 1,
-					alignItems: "center",
-					justifyContent: "space-evenly",
+					alignItems: 'center',
+					justifyContent: 'space-evenly',
 				}}
 			>
 				{objectValuesArray.map(([key, value], index) => (
@@ -51,7 +51,7 @@ export default function MoreEm(props) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "white",
+		backgroundColor: 'white',
 	},
 	pills: {
 		fontSize: 35,
@@ -59,9 +59,9 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 75,
 		paddingVertical: 30,
 		marginVertical: 5,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-evenly",
-		backgroundColor: "#ffc8dd",
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-evenly',
+		backgroundColor: '#ffc8dd',
 	},
 });

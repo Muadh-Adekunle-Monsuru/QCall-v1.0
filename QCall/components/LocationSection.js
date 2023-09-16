@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
 	Platform,
 	Text,
@@ -9,17 +9,13 @@ import {
 	Linking,
 	AlertComponent,
 	Button,
-} from "react-native";
-import * as Device from "expo-device";
-import * as Location from "expo-location";
-import { FontAwesome } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import axios from "axios";
-import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-
-var latitude = " ";
-var longitude = "";
+} from 'react-native';
+import * as Device from 'expo-device';
+import * as Location from 'expo-location';
+import axios from 'axios';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+var latitude = ' ';
+var longitude = '';
 var myResponse;
 export default function LocationSection({ navigation }) {
 	const [location, setLocation] = useState(null);
@@ -28,11 +24,17 @@ export default function LocationSection({ navigation }) {
 	const [responseData, setResponseData] = useState(null);
 	const [errorMsg, setErrorMsg] = useState(null);
 	const [user, setUser] = useState(null); // Change initial state to null
-	const [street, setStreet] = useState(""); // Initialize street state
-	const [lga, setLga] = useState(""); // Initialize street state
-	const [state, setState] = useState(""); // Initialize street state
-	const [buttonText, setButtonText] = useState("Waiting For Coordinates");
+	const [street, setStreet] = useState(''); // Initialize street state
+	const [lga, setLga] = useState(''); // Initialize street state
+	const [state, setState] = useState(''); // Initialize street state
+	const [buttonText, setButtonText] = useState('Waiting For Coordinates');
 	const [showMore, setShowMore] = useState(false);
+	const [myArray, setMyArray] = useState(null);
+	const baseId = 'appHNtEXMOYDoVO7P';
+	const tableIdOrName = 'tbl3WmhzqEvq2TSDl';
+	const apiKey =
+		'patsREE4xPJYLYJFH.ace1fff28d11239ad3aa74e078802b65775a283c2e942f8d9f78aa499aac10b3'; // Replace with your actual API key
+
 	const getIsFormValid = () => {
 		return buttonActivation;
 	};
@@ -43,22 +45,21 @@ export default function LocationSection({ navigation }) {
 	useEffect(() => {
 		(async () => {
 			let { status } = await Location.requestForegroundPermissionsAsync();
-			if (status !== "granted") {
-				setErrorMsg("Permission to access location was denied");
+			if (status !== 'granted') {
+				setErrorMsg('Permission to access location was denied');
 				return;
 			}
 			let location = await Location.getCurrentPositionAsync({});
 			setLocation(location);
 			setButtonActivation(true);
-			setButtonText("Get Address");
+			setButtonText('Get Address');
 		})();
 	}, []);
-	let text = "Waiting...";
+
+	let text = 'Waiting...';
 	if (errorMsg) {
 		Alert.alert(errorMsg);
 	} else if (location) {
-		// Alert.alert("Cooredinated Gotten");
-		//
 		latitude = location.coords.latitude;
 		longitude = location.coords.longitude;
 		text = JSON.stringify(location);
@@ -79,36 +80,46 @@ export default function LocationSection({ navigation }) {
 					fetchData(data.results[0].components.county);
 				}
 			} else {
-				console.error("Error fetching data:", data);
-				Alert.alert("Error fetching data:", data);
+				console.error('Error fetching data:', data);
+				Alert.alert('Error fetching data:', data);
 			}
 		} catch (error) {
-			console.error("Error fetching data:", error);
-			Alert.alert("Error fetching data", error.message);
+			console.error('Error fetching data:', error);
+			Alert.alert('Error fetching data', error.message);
 		}
 	};
-
-	const fetchData = (prop) => {
-		let encodedLGA = encodeURIComponent(prop); // Encode spaces as %20
+	const fetchData = async (prop) => {
 		axios
-			.get(
-				`https://sheetdb.io/api/v1/sc073hiofw97m/search?lganame=${encodedLGA}&sheet=data`
+			.post(
+				`https://api.airtable.com/v0/${baseId}/${tableIdOrName}/listRecords`,
+				{
+					view: 'grid',
+					filterByFormula: `{lganame} = "${prop}"`,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${apiKey}`,
+						'Content-Type': 'application/json',
+					},
+				}
 			)
 			.then((response) => {
-				setResponseData(response.data);
+				var theresponse = JSON.parse(response.request.response);
+				var finalres = theresponse.records[0].fields;
+				setResponseData(finalres);
 				setShowMore(true);
 			})
 			.catch((error) => {
-				console.error("Error fetching data:", error);
+				console.error('Error fetching data:', error);
 			});
 	};
 	return (
-		<View style={{ flex: 1, backgroundColor: "#F5F5Ff" }}>
+		<View style={{ flex: 1, backgroundColor: '#F5F5Ff' }}>
 			<View style={styles.container1}>
 				<View
 					style={{
 						flex: 1,
-						justifyContent: "space-evenly",
+						justifyContent: 'space-evenly',
 					}}
 				>
 					<Text
@@ -197,11 +208,10 @@ export default function LocationSection({ navigation }) {
 					style={[
 						styles.pills,
 						{
-							backgroundColor: "#ffe5d9",
+							backgroundColor: '#ffe5d9',
 						},
 					]}
 				>
-					<FontAwesome name="fire" size={25} color="black" />
 					<Text numberOfLines={1} adjustsFontSizeToFit style={{ fontSize: 25 }}>
 						Fire:
 					</Text>
@@ -210,46 +220,42 @@ export default function LocationSection({ navigation }) {
 							numberOfLines={1}
 							adjustsFontSizeToFit
 							onPress={() =>
-								Linking.openURL(`tel:${JSON.stringify(responseData[0].fire)}`)
+								Linking.openURL(`tel:${JSON.stringify(responseData.fire)}`)
 							}
 						>
-							{responseData[0].fire}
+							{responseData.fire}
 						</Text>
 					)}
 				</Pressable>
-				<Pressable style={[styles.pills, { backgroundColor: "#ccd5ae" }]}>
-					<FontAwesome5 name="clinic-medical" size={25} color="black" />
+				<Pressable style={[styles.pills, { backgroundColor: '#ccd5ae' }]}>
 					<Text style={{ fontSize: 25 }}>Medical :</Text>
 					{responseData && (
 						<Text
 							numberOfLines={1}
 							adjustsFontSizeToFit
 							onPress={() =>
-								Linking.openURL(
-									`tel:${JSON.stringify(responseData[0].medical)}`
-								)
+								Linking.openURL(`tel:${JSON.stringify(responseData.medical)}`)
 							}
 						>
-							{responseData[0].medical}
+							{responseData.medical}
 						</Text>
 					)}
 				</Pressable>
-				<Pressable style={[styles.pills, { backgroundColor: "#bde0fe" }]}>
-					<MaterialCommunityIcons name="police-badge" size={25} color="black" />
+				<Pressable style={[styles.pills, { backgroundColor: '#bde0fe' }]}>
 					<Text style={{ fontSize: 25 }}>Police:</Text>
 					{responseData && (
 						<Text
 							onPress={() =>
-								Linking.openURL(`tel:${JSON.stringify(responseData[0].police)}`)
+								Linking.openURL(`tel:${JSON.stringify(responseData.police)}`)
 							}
 						>
-							{responseData[0].police}
+							{responseData.police}
 						</Text>
 					)}
 				</Pressable>
 				<Pressable
 					onPress={() =>
-						navigation.push("More Emergencies", {
+						navigation.push('More Emergencies', {
 							data: { responseData },
 						})
 					}
@@ -261,13 +267,13 @@ export default function LocationSection({ navigation }) {
 						style={
 							isShowMoreValid()
 								? {
-										fontWeight: "bold",
-										color: "blue",
+										fontWeight: 'bold',
+										color: 'blue',
 										fontSize: 20,
 								  }
 								: {
-										fontWeight: "bold",
-										color: "gray",
+										fontWeight: 'bold',
+										color: 'gray',
 										fontSize: 20,
 								  }
 						}
@@ -278,7 +284,7 @@ export default function LocationSection({ navigation }) {
 			</View>
 			<Pressable
 				style={isShowMoreValid() ? styles.buttonE : styles.buttonD}
-				onPress={() => navigation.navigate("Other Contacts", { lga: { lga } })}
+				onPress={() => navigation.navigate('Other Contacts', { lga: { lga } })}
 				disabled={!isShowMoreValid()}
 			>
 				<Text numberOfLines={1} adjustsFontSizeToFit style={styles.buttonText}>
@@ -292,91 +298,91 @@ export default function LocationSection({ navigation }) {
 const styles = StyleSheet.create({
 	container1: {
 		flex: 0.45,
-		alignItems: "center",
-		justifyContent: "center",
+		alignItems: 'center',
+		justifyContent: 'center',
 		paddingHorizontal: 25,
 		paddingVertical: 20,
-		backgroundColor: "white",
+		backgroundColor: 'white',
 		borderRadius: 50,
 		margin: 10,
 		marginHorizontal: 20,
 	},
 	blockHeading: {
-		fontWeight: "bold",
+		fontWeight: 'bold',
 		fontSize: 35,
-		textAlign: "center",
+		textAlign: 'center',
 	},
 	nonEmphasised: {
 		fontSize: 15,
-		textAlign: "center",
+		textAlign: 'center',
 	},
 	emphsised: {
 		fontSize: 70,
-		textAlign: "center",
-		fontWeight: "300",
+		textAlign: 'center',
+		fontWeight: '300',
 	},
 	button: {
-		alignItems: "center",
-		justifyContent: "center",
+		alignItems: 'center',
+		justifyContent: 'center',
 		paddingVertical: 12,
 		paddingHorizontal: 92,
 		marginHorizontal: 10,
 		borderRadius: 8,
 		elevation: 3,
-		backgroundColor: "#D5BDA9",
+		backgroundColor: '#D5BDA9',
 	},
 
 	buttonE: {
-		alignItems: "center",
-		justifyContent: "center",
+		alignItems: 'center',
+		justifyContent: 'center',
 		paddingVertical: 12,
 		paddingHorizontal: 92,
 		marginHorizontal: 10,
 		borderRadius: 8,
 		elevation: 3,
-		backgroundColor: "#D5BDA9",
+		backgroundColor: '#D5BDA9',
 	},
 	buttonD: {
-		alignItems: "center",
-		justifyContent: "center",
+		alignItems: 'center',
+		justifyContent: 'center',
 		paddingVertical: 12,
 		paddingHorizontal: 92,
 		marginHorizontal: 10,
 		borderRadius: 8,
 		elevation: 3,
-		backgroundColor: "gray",
+		backgroundColor: 'gray',
 	},
 	buttonText: {
 		fontSize: 16,
 		lineHeight: 21,
-		fontWeight: "bold",
+		fontWeight: 'bold',
 		letterSpacing: 0.25,
-		color: "white",
+		color: 'white',
 	},
 	text: {
 		marginTop: 20,
 		fontSize: 18,
-		textAlign: "center",
+		textAlign: 'center',
 	},
 	container2: {
 		flex: 0.5,
-		alignItems: "center",
-		justifyContent: "space-evenly",
+		alignItems: 'center',
+		justifyContent: 'space-evenly',
 		paddingHorizontal: 25,
 		paddingVertical: 20,
-		backgroundColor: "white",
+		backgroundColor: 'white',
 		borderRadius: 50,
 		margin: 10,
 		marginHorizontal: 20,
 	},
 	pills: {
-		width: "90%",
-		height: "15%",
+		width: '90%',
+		height: '15%',
 		fontSize: 25,
 		borderRadius: 30,
 		marginVertical: 5,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-evenly",
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-evenly',
 	},
 });
