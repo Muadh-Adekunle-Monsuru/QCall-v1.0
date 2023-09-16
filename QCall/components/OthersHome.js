@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
 	Platform,
 	Pressable,
@@ -6,32 +6,40 @@ import {
 	View,
 	StyleSheet,
 	Alert,
-} from "react-native";
-import PageButton from "./PageButton";
-import Police from "./Police";
+} from 'react-native';
+import PageButton from './PageButton';
+import Police from './Police';
 export default function OthersHompage(props) {
 	const lga = props.route.params.lga.lga;
 	return (
 		<View style={styles.container}>
 			<Pressable
-				style={{ alignContent: "center" }}
-				onPress={() => props.navigation.navigate("Police", { lga: { lga } })}
+				style={{ alignContent: 'center' }}
+				onPress={() => props.navigation.navigate('Police', { lga: { lga } })}
 			>
-				<PageButton text="Police Personnels" backgroundColor="#FFD6FF" />
+				<PageButton text='Police Personnels' backgroundColor='#FFD6FF' />
 			</Pressable>
-			<Pressable onPress={() => props.navigation.navigate("Army")}>
-				<PageButton text="Army Personnels" backgroundColor="#E7C6FF" />
+			<Pressable onPress={() => props.navigation.navigate('Army')}>
+				<PageButton text='Army Personnels' backgroundColor='#E7C6FF' />
 			</Pressable>
-			<Pressable onPress={() => props.navigation.navigate("Local Government")}>
+			<Pressable
+				onPress={() =>
+					props.navigation.navigate('Local Government', { lga: { lga } })
+				}
+			>
 				<PageButton
-					text="Local Government Personnels"
-					backgroundColor="#C8B6FF"
+					text='Local Government Personnels'
+					backgroundColor='#C8B6FF'
 				/>
 			</Pressable>
-			<Pressable onPress={() => props.navigation.navigate("State Government")}>
+			<Pressable
+				onPress={() =>
+					props.navigation.navigate('State Government', { lga: { lga } })
+				}
+			>
 				<PageButton
-					text="State Government Personnels"
-					backgroundColor="#B8C0FF"
+					text='State Government Personnels'
+					backgroundColor='#B8C0FF'
 				/>
 			</Pressable>
 		</View>
@@ -41,7 +49,7 @@ export default function OthersHompage(props) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "white",
-		justifyContent: "space-evenly",
+		backgroundColor: 'white',
+		justifyContent: 'space-evenly',
 	},
 });

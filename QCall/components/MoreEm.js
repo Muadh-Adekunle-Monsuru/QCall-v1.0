@@ -14,7 +14,7 @@ import LocationSection from './LocationSection';
 export default function MoreEm(props) {
 	const objectValuesArray = Object.entries(
 		props.route.params.data.responseData
-	);
+	).splice(6);
 	return (
 		<View
 			style={{ flex: 1, alignItems: 'center', justifyContent: 'space-evenly' }}

@@ -8,6 +8,7 @@ import {
 	StyleSheet,
 	Linking,
 } from 'react-native';
+import axios from 'axios';
 const baseId = 'appHNtEXMOYDoVO7P';
 const tableIdOrName = 'tbltNU9EDPUO1ExpK';
 const apiKey =
@@ -15,36 +16,61 @@ const apiKey =
 
 export default function Police(props) {
 	const [ResponseData, setResponseData] = useState(null);
-	useEffect(() => {
-		console.log('calling api');
-		async () => {
-			axios
-				.get(
-					`https://api.airtable.com/v0/${baseId}/${tableIdOrName}`,
+	const [myArray, setMyArray] = useState(null);
 
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get(
+					`https://api.airtable.com/v0/${baseId}/${tableIdOrName}`,
 					{
 						headers: {
 							Authorization: `Bearer ${apiKey}`,
 							'Content-Type': 'application/json',
 						},
 					}
-				)
-				.then((response) => {
-					var theresponse = JSON.parse(response.request.response);
-					var finalres = theresponse.records[0].fields;
-					// setResponseData(finalres);
-					console.log(response);
-				})
-				.catch((error) => {
-					console.error('Error fetching data:', error);
-				});
+				);
+				const responseData = response.data.records[0].fields;
+				setMyArray(Object.entries(responseData));
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
 		};
-	}, []);
+
+		fetchData(); // Invoke the fetchData function
+	}, []); // Empty dependency array means this effect runs once on component mount
 
 	return (
 		<View>
 			<Text>Police rank </Text>
-			{ResponseData && <Text>{ResponseData}</Text>}
+			<View>
+				{myArray &&
+					myArray.map(([key, value], index) => (
+						<View key={index}>
+							<Pressable
+								style={styles.pills}
+								onPress={() => Linking.openURL(`tel:${value}`)}
+							>
+								<Text>
+									{key}: {value}
+								</Text>
+							</Pressable>
+						</View>
+					))}
+			</View>
 		</View>
 	);
 }
+const styles = StyleSheet.create({
+	pills: {
+		fontSize: 25,
+		borderRadius: 30,
+		paddingHorizontal: 75,
+		paddingVertical: 20,
+		marginVertical: 5,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-evenly',
+		backgroundColor: '#ffc8dd',
+	},
+});

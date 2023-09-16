@@ -284,7 +284,12 @@ export default function LocationSection({ navigation }) {
 			</View>
 			<Pressable
 				style={isShowMoreValid() ? styles.buttonE : styles.buttonD}
-				onPress={() => navigation.navigate('Other Contacts', { lga: { lga } })}
+				onPress={() =>
+					navigation.navigate('Other Contacts', {
+						lga: { lga },
+						state: { state },
+					})
+				}
 				disabled={!isShowMoreValid()}
 			>
 				<Text numberOfLines={1} adjustsFontSizeToFit style={styles.buttonText}>
