@@ -14,6 +14,8 @@ import * as Device from 'expo-device';
 import * as Location from 'expo-location';
 import axios from 'axios';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { AntDesign } from '@expo/vector-icons';
 var latitude = ' ';
 var longitude = '';
 var myResponse;
@@ -114,149 +116,219 @@ export default function LocationSection({ navigation }) {
 			});
 	};
 	return (
-		<View style={{ flex: 1, backgroundColor: '#F5F5Ff' }}>
-			<View style={styles.container1}>
-				<View
-					style={{
-						flex: 1,
-						justifyContent: 'space-evenly',
-					}}
-				>
+		<SafeAreaProvider>
+			<SafeAreaView style={{ flex: 1, backgroundColor: '#F5F5Ff' }}>
+				<View style={styles.container1}>
+					<View
+						style={{
+							flex: 1,
+							justifyContent: 'space-evenly',
+						}}
+					>
+						<Text
+							numberOfLines={1}
+							adjustsFontSizeToFit
+							style={styles.blockHeading}
+						>
+							Location
+						</Text>
+						{(user && (
+							<Text
+								numberOfLines={1}
+								adjustsFontSizeToFit
+								style={styles.nonEmphasised}
+							>
+								{street}
+							</Text>
+						)) || (
+							<Text
+								numberOfLines={1}
+								adjustsFontSizeToFit
+								style={styles.nonEmphasised}
+							>
+								Street
+							</Text>
+						)}
+						{(user && (
+							<Text
+								numberOfLines={1}
+								adjustsFontSizeToFit
+								style={styles.emphsised}
+							>
+								{lga}
+							</Text>
+						)) || (
+							<Text
+								numberOfLines={1}
+								adjustsFontSizeToFit
+								style={styles.emphsised}
+							>
+								LGA
+							</Text>
+						)}
+						{(user && (
+							<Text
+								numberOfLines={1}
+								adjustsFontSizeToFit
+								style={styles.nonEmphasised}
+							>
+								{state}
+							</Text>
+						)) || (
+							<Text
+								numberOfLines={1}
+								adjustsFontSizeToFit
+								style={styles.nonEmphasised}
+							>
+								State
+							</Text>
+						)}
+					</View>
+
+					<Pressable
+						style={getIsFormValid() ? styles.buttonE : styles.buttonD}
+						onPress={handleClick}
+						disabled={!getIsFormValid()}
+					>
+						<Text
+							numberOfLines={1}
+							adjustsFontSizeToFit
+							style={styles.buttonText}
+						>
+							{buttonText}
+						</Text>
+					</Pressable>
+				</View>
+				<View style={styles.container2}>
 					<Text
 						numberOfLines={1}
 						adjustsFontSizeToFit
 						style={styles.blockHeading}
 					>
-						Location
+						Emergency Type:
 					</Text>
-					{(user && (
-						<Text
-							numberOfLines={1}
-							adjustsFontSizeToFit
-							style={styles.nonEmphasised}
-						>
-							{street}
-						</Text>
-					)) || (
-						<Text
-							numberOfLines={1}
-							adjustsFontSizeToFit
-							style={styles.nonEmphasised}
-						>
-							Street
-						</Text>
-					)}
-					{(user && (
-						<Text
-							numberOfLines={1}
-							adjustsFontSizeToFit
-							style={styles.emphsised}
-						>
-							{lga}
-						</Text>
-					)) || (
-						<Text
-							numberOfLines={1}
-							adjustsFontSizeToFit
-							style={styles.emphsised}
-						>
-							LGA
-						</Text>
-					)}
-					{(user && (
-						<Text
-							numberOfLines={1}
-							adjustsFontSizeToFit
-							style={styles.nonEmphasised}
-						>
-							{state}
-						</Text>
-					)) || (
-						<Text
-							numberOfLines={1}
-							adjustsFontSizeToFit
-							style={styles.nonEmphasised}
-						>
-							State
-						</Text>
-					)}
-				</View>
-
-				<Pressable
-					style={getIsFormValid() ? styles.buttonE : styles.buttonD}
-					onPress={handleClick}
-					disabled={!getIsFormValid()}
-				>
-					<Text
-						numberOfLines={1}
-						adjustsFontSizeToFit
-						style={styles.buttonText}
+					<View
+						style={{
+							flexDirection: 'row',
+							alignItems: 'center',
+							justifyContent: 'space-between',
+						}}
 					>
-						{buttonText}
-					</Text>
-				</Pressable>
-			</View>
-			<View style={styles.container2}>
-				<Text
-					numberOfLines={1}
-					adjustsFontSizeToFit
-					style={styles.blockHeading}
-				>
-					Emergency Type:
-				</Text>
-				<Pressable
-					style={[
-						styles.pills,
-						{
-							backgroundColor: '#ffe5d9',
-						},
-					]}
-				>
-					<Text numberOfLines={1} adjustsFontSizeToFit style={{ fontSize: 25 }}>
-						Fire:
-					</Text>
-					{responseData && (
+						<View
+							style={[
+								styles.pills,
+								{ width: isShowMoreValid() ? '60%' : '100%' },
+							]}
+						>
+							<Text style={{ fontSize: 20 }}>Fire</Text>
+						</View>
+
+						{responseData && (
+							<Pressable
+								style={styles.callButton}
+								onPress={() =>
+									Linking.openURL(`tel:${JSON.stringify(responseData.fire)}`)
+								}
+							>
+								<Text style={{ textAlign: 'center' }}>
+									<AntDesign name='phone' size={24} color='black' />
+								</Text>
+							</Pressable>
+						)}
+					</View>
+					<View
+						style={{
+							flexDirection: 'row',
+							alignItems: 'center',
+							justifyContent: 'space-between',
+						}}
+					>
+						<View
+							style={[
+								styles.pills,
+								{ width: isShowMoreValid() ? '60%' : '100%' },
+							]}
+						>
+							<Text style={{ fontSize: 20 }}> Medical</Text>
+						</View>
+						{responseData && (
+							<Pressable
+								style={styles.callButton}
+								onPress={() =>
+									Linking.openURL(`tel:${JSON.stringify(responseData.medical)}`)
+								}
+							>
+								<Text style={{ textAlign: 'center' }}>
+									<AntDesign name='phone' size={24} color='black' />
+								</Text>
+							</Pressable>
+						)}
+					</View>
+					<View
+						style={{
+							flexDirection: 'row',
+							alignItems: 'center',
+							justifyContent: 'space-between',
+						}}
+					>
+						<View
+							style={[
+								styles.pills,
+								{ width: isShowMoreValid() ? '60%' : '100%' },
+							]}
+						>
+							<Text style={{ fontSize: 20 }}>Police</Text>
+						</View>
+						{responseData && (
+							<Pressable
+								onPress={() =>
+									Linking.openURL(`tel:${JSON.stringify(responseData.police)}`)
+								}
+								style={styles.callButton}
+							>
+								<Text style={{ textAlign: 'center' }}>
+									<AntDesign name='phone' size={24} color='black' />
+								</Text>
+							</Pressable>
+						)}
+					</View>
+					<Pressable
+						onPress={() =>
+							navigation.push('More Emergencies', {
+								data: { responseData },
+							})
+						}
+						disabled={!isShowMoreValid()}
+					>
 						<Text
 							numberOfLines={1}
 							adjustsFontSizeToFit
-							onPress={() =>
-								Linking.openURL(`tel:${JSON.stringify(responseData.fire)}`)
+							style={
+								isShowMoreValid()
+									? {
+											fontWeight: 'bold',
+											color: '#284b63',
+											fontSize: 20,
+											alignSelf: 'center',
+									  }
+									: {
+											fontWeight: 'bold',
+											color: '#dee2e6',
+											fontSize: 20,
+											alignSelf: 'center',
+									  }
 							}
 						>
-							{responseData.fire}
+							More Emergencies +
 						</Text>
-					)}
-				</Pressable>
-				<Pressable style={[styles.pills, { backgroundColor: '#ccd5ae' }]}>
-					<Text style={{ fontSize: 25 }}>Medical :</Text>
-					{responseData && (
-						<Text
-							numberOfLines={1}
-							adjustsFontSizeToFit
-							onPress={() =>
-								Linking.openURL(`tel:${JSON.stringify(responseData.medical)}`)
-							}
-						>
-							{responseData.medical}
-						</Text>
-					)}
-				</Pressable>
-				<Pressable style={[styles.pills, { backgroundColor: '#bde0fe' }]}>
-					<Text style={{ fontSize: 25 }}>Police:</Text>
-					{responseData && (
-						<Text
-							onPress={() =>
-								Linking.openURL(`tel:${JSON.stringify(responseData.police)}`)
-							}
-						>
-							{responseData.police}
-						</Text>
-					)}
-				</Pressable>
+					</Pressable>
+				</View>
 				<Pressable
+					style={isShowMoreValid() ? styles.buttonE : styles.buttonD}
 					onPress={() =>
-						navigation.push('More Emergencies', {
-							data: { responseData },
+						navigation.navigate('Other Contacts', {
+							lga: { lga },
+							state: { state },
 						})
 					}
 					disabled={!isShowMoreValid()}
@@ -264,39 +336,13 @@ export default function LocationSection({ navigation }) {
 					<Text
 						numberOfLines={1}
 						adjustsFontSizeToFit
-						style={
-							isShowMoreValid()
-								? {
-										fontWeight: 'bold',
-										color: 'blue',
-										fontSize: 20,
-								  }
-								: {
-										fontWeight: 'bold',
-										color: 'gray',
-										fontSize: 20,
-								  }
-						}
+						style={styles.buttonText}
 					>
-						Show More +
+						Other Contacts
 					</Text>
 				</Pressable>
-			</View>
-			<Pressable
-				style={isShowMoreValid() ? styles.buttonE : styles.buttonD}
-				onPress={() =>
-					navigation.navigate('Other Contacts', {
-						lga: { lga },
-						state: { state },
-					})
-				}
-				disabled={!isShowMoreValid()}
-			>
-				<Text numberOfLines={1} adjustsFontSizeToFit style={styles.buttonText}>
-					Other Contacts
-				</Text>
-			</Pressable>
-		</View>
+			</SafeAreaView>
+		</SafeAreaProvider>
 	);
 }
 
@@ -336,6 +382,14 @@ const styles = StyleSheet.create({
 		elevation: 3,
 		backgroundColor: '#D5BDA9',
 	},
+	callButton: {
+		backgroundColor: '#00b4d8',
+		paddingVertical: '7%',
+		borderRadius: 10,
+		width: '35%',
+		justifyContent: 'center',
+		alignContent: 'center',
+	},
 
 	buttonE: {
 		alignItems: 'center',
@@ -355,7 +409,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 10,
 		borderRadius: 8,
 		elevation: 3,
-		backgroundColor: 'gray',
+		backgroundColor: '#dee2e6',
 	},
 	buttonText: {
 		fontSize: 16,
@@ -371,7 +425,6 @@ const styles = StyleSheet.create({
 	},
 	container2: {
 		flex: 0.5,
-		alignItems: 'center',
 		justifyContent: 'space-evenly',
 		paddingHorizontal: 25,
 		paddingVertical: 20,
@@ -381,13 +434,12 @@ const styles = StyleSheet.create({
 		marginHorizontal: 20,
 	},
 	pills: {
-		width: '90%',
-		height: '15%',
-		fontSize: 25,
-		borderRadius: 30,
+		paddingVertical: '7%',
+		borderRadius: 10,
 		marginVertical: 5,
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-evenly',
+		backgroundColor: '#f8f9fa',
 	},
 });
