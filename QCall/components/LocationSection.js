@@ -16,6 +16,7 @@ import axios from 'axios';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign } from '@expo/vector-icons';
+import CallRow from './CallRow';
 var latitude = ' ';
 var longitude = '';
 var myResponse;
@@ -207,91 +208,34 @@ export default function LocationSection({ navigation }) {
 					>
 						Emergency Type:
 					</Text>
-					<View
-						style={{
-							flexDirection: 'row',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-						}}
-					>
-						<View
-							style={[
-								styles.pills,
-								{ width: isShowMoreValid() ? '60%' : '100%' },
-							]}
-						>
-							<Text style={{ fontSize: 20 }}>Fire</Text>
-						</View>
+					<View>
+						{(responseData && (
+							<CallRow
+								name='Fire'
+								number={JSON.stringify(responseData.fire)}
+								index={1}
+							/>
+						)) || <Text style={styles.pills}>Fire</Text>}
+					</View>
+					<View>
+						{(responseData && (
+							<CallRow
+								name='Medical'
+								number={JSON.stringify(responseData.medical)}
+								index={2}
+							/>
+						)) || <Text style={styles.pills}>Medical</Text>}
+					</View>
+					<View>
+						{(responseData && (
+							<CallRow
+								name='Police'
+								number={JSON.stringify(responseData.police)}
+								index={3}
+							/>
+						)) || <Text style={styles.pills}>Police</Text>}
+					</View>
 
-						{responseData && (
-							<Pressable
-								style={styles.callButton}
-								onPress={() =>
-									Linking.openURL(`tel:${JSON.stringify(responseData.fire)}`)
-								}
-							>
-								<Text style={{ textAlign: 'center' }}>
-									<AntDesign name='phone' size={24} color='black' />
-								</Text>
-							</Pressable>
-						)}
-					</View>
-					<View
-						style={{
-							flexDirection: 'row',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-						}}
-					>
-						<View
-							style={[
-								styles.pills,
-								{ width: isShowMoreValid() ? '60%' : '100%' },
-							]}
-						>
-							<Text style={{ fontSize: 20 }}> Medical</Text>
-						</View>
-						{responseData && (
-							<Pressable
-								style={styles.callButton}
-								onPress={() =>
-									Linking.openURL(`tel:${JSON.stringify(responseData.medical)}`)
-								}
-							>
-								<Text style={{ textAlign: 'center' }}>
-									<AntDesign name='phone' size={24} color='black' />
-								</Text>
-							</Pressable>
-						)}
-					</View>
-					<View
-						style={{
-							flexDirection: 'row',
-							alignItems: 'center',
-							justifyContent: 'space-between',
-						}}
-					>
-						<View
-							style={[
-								styles.pills,
-								{ width: isShowMoreValid() ? '60%' : '100%' },
-							]}
-						>
-							<Text style={{ fontSize: 20 }}>Police</Text>
-						</View>
-						{responseData && (
-							<Pressable
-								onPress={() =>
-									Linking.openURL(`tel:${JSON.stringify(responseData.police)}`)
-								}
-								style={styles.callButton}
-							>
-								<Text style={{ textAlign: 'center' }}>
-									<AntDesign name='phone' size={24} color='black' />
-								</Text>
-							</Pressable>
-						)}
-					</View>
 					<Pressable
 						onPress={() =>
 							navigation.push('More Emergencies', {
@@ -441,5 +385,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-evenly',
 		backgroundColor: '#f8f9fa',
+		width: '100%',
+		textAlign: 'center',
 	},
 });
