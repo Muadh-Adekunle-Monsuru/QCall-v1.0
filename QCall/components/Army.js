@@ -7,8 +7,10 @@ import {
 	Alert,
 	StyleSheet,
 	Linking,
+	ScrollView,
 } from 'react-native';
 import axios from 'axios';
+import CallRow from './CallRow';
 const baseId = 'appHNtEXMOYDoVO7P';
 const tableIdOrName = 'tblNmHb6fHe23sBeR';
 const apiKey =
@@ -41,23 +43,20 @@ export default function Army(props) {
 	}, []); // Empty dependency array means this effect runs once on component mount
 
 	return (
-		<View>
+		<View style={{ flex: 1, backgroundColor: 'white' }}>
 			<Text>Army rank </Text>
-			<View>
+			<ScrollView
+				style={styles.container}
+				alwaysBounceVertical={true}
+				bounces={true}
+			>
 				{myArray &&
 					myArray.map(([key, value], index) => (
 						<View key={index}>
-							<Pressable
-								style={styles.pills}
-								onPress={() => Linking.openURL(`tel:${value}`)}
-							>
-								<Text>
-									{key}: {value}
-								</Text>
-							</Pressable>
+							<CallRow name={key} number={value} index={index} />
 						</View>
 					))}
-			</View>
+			</ScrollView>
 		</View>
 	);
 }
@@ -72,5 +71,10 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-evenly',
 		backgroundColor: '#ffc8dd',
+	},
+	container: {
+		flex: 0.9,
+		backgroundColor: 'white',
+		marginHorizontal: 10,
 	},
 });

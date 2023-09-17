@@ -9,42 +9,21 @@ import {
 	Linking,
 	ScrollView,
 } from 'react-native';
-import LocationSection from './LocationSection';
-
+import CallRow from './CallRow';
 export default function MoreEm(props) {
 	const objectValuesArray = Object.entries(
 		props.route.params.data.responseData
 	).splice(6);
 	return (
-		<View
-			style={{ flex: 1, alignItems: 'center', justifyContent: 'space-evenly' }}
+		<ScrollView
+			style={styles.container}
+			alwaysBounceVertical={true}
+			bounces={true}
 		>
-			<View
-				style={{
-					flex: 1,
-					alignItems: 'center',
-					justifyContent: 'space-evenly',
-				}}
-			>
-				{objectValuesArray.map(([key, value], index) => (
-					<View key={index}>
-						<Pressable
-							style={styles.pills}
-							onPress={() => Linking.openURL(`tel:${value}`)}
-						>
-							<Text
-								numberOfLines={1}
-								adjustsFontSizeToFit
-								key={index}
-								style={{ fontSize: 20 }}
-							>
-								{key}: {value}
-							</Text>
-						</Pressable>
-					</View>
-				))}
-			</View>
-		</View>
+			{objectValuesArray.map(([key, value], index) => (
+				<CallRow name={key} number={value} index={index} />
+			))}
+		</ScrollView>
 	);
 }
 
@@ -52,6 +31,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: 'white',
+		marginHorizontal: 10,
 	},
 	pills: {
 		fontSize: 35,

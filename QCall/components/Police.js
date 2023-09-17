@@ -7,8 +7,10 @@ import {
 	Alert,
 	StyleSheet,
 	Linking,
+	ScrollView,
 } from 'react-native';
 import axios from 'axios';
+import CallRow from './CallRow';
 const baseId = 'appHNtEXMOYDoVO7P';
 const tableIdOrName = 'tbltNU9EDPUO1ExpK';
 const apiKey =
@@ -41,36 +43,25 @@ export default function Police(props) {
 	}, []); // Empty dependency array means this effect runs once on component mount
 
 	return (
-		<View>
+		<View style={{ flex: 1, backgroundColor: 'white' }}>
 			<Text>Police rank </Text>
-			<View>
+			<ScrollView
+				style={styles.container}
+				alwaysBounceVertical={true}
+				bounces={true}
+			>
 				{myArray &&
 					myArray.map(([key, value], index) => (
-						<View key={index}>
-							<Pressable
-								style={styles.pills}
-								onPress={() => Linking.openURL(`tel:${value}`)}
-							>
-								<Text>
-									{key}: {value}
-								</Text>
-							</Pressable>
-						</View>
+						<CallRow name={key} number={value} index={index} />
 					))}
-			</View>
+			</ScrollView>
 		</View>
 	);
 }
 const styles = StyleSheet.create({
-	pills: {
-		fontSize: 25,
-		borderRadius: 30,
-		paddingHorizontal: 75,
-		paddingVertical: 20,
-		marginVertical: 5,
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-evenly',
-		backgroundColor: '#ffc8dd',
+	container: {
+		flex: 0.9,
+		backgroundColor: 'white',
+		marginHorizontal: 10,
 	},
 });
