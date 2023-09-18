@@ -52,7 +52,9 @@ export default function Police(props) {
 			>
 				{myArray &&
 					myArray.map(([key, value], index) => (
-						<CallRow name={key} number={value} index={index} />
+						<View key={index}>
+							<CallRow name={key} number={value} index={index} />
+						</View>
 					))}
 			</ScrollView>
 		</View>

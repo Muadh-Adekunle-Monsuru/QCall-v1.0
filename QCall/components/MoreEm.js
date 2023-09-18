@@ -15,15 +15,19 @@ export default function MoreEm(props) {
 		props.route.params.data.responseData
 	).splice(6);
 	return (
-		<ScrollView
-			style={styles.container}
-			alwaysBounceVertical={true}
-			bounces={true}
-		>
-			{objectValuesArray.map(([key, value], index) => (
-				<CallRow name={key} number={value} index={index} />
-			))}
-		</ScrollView>
+		<View style={{ flex: 1, backgroundColor: 'white' }}>
+			<ScrollView
+				style={styles.container}
+				alwaysBounceVertical={true}
+				bounces={true}
+			>
+				{objectValuesArray.map(([key, value], index) => (
+					<View key={index}>
+						<CallRow name={key} number={value} index={index} />
+					</View>
+				))}
+			</ScrollView>
+		</View>
 	);
 }
 

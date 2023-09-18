@@ -15,20 +15,22 @@ import * as Location from 'expo-location';
 import axios from 'axios';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { AntDesign } from '@expo/vector-icons';
 import CallRow from './CallRow';
+import { ScrollView } from 'react-native-gesture-handler';
+import LottieView from 'lottie-react-native';
+import MapAnimation from './Animation';
+
 var latitude = ' ';
 var longitude = '';
 var myResponse;
 export default function LocationSection({ navigation }) {
 	const [location, setLocation] = useState(null);
 	const [buttonActivation, setButtonActivation] = useState(false);
-	const [locationEnabled, setLocationEnabled] = useState(false);
 	const [responseData, setResponseData] = useState(null);
 	const [errorMsg, setErrorMsg] = useState(null);
 	const [user, setUser] = useState(null); // Change initial state to null
 	const [street, setStreet] = useState(''); // Initialize street state
-	const [lga, setLga] = useState(''); // Initialize street state
+	const [lga, setLga] = useState(null); // Initialize street state
 	const [state, setState] = useState(''); // Initialize street state
 	const [buttonText, setButtonText] = useState('Waiting For Coordinates');
 	const [showMore, setShowMore] = useState(false);
@@ -47,15 +49,27 @@ export default function LocationSection({ navigation }) {
 
 	useEffect(() => {
 		(async () => {
-			let { status } = await Location.requestForegroundPermissionsAsync();
-			if (status !== 'granted') {
-				setErrorMsg('Permission to access location was denied');
-				return;
+			let locationEnabled = await Location.hasServicesEnabledAsync();
+			if (locationEnabled) {
+				let { status } = await Location.requestForegroundPermissionsAsync();
+				if (status !== 'granted') {
+					setErrorMsg('Permission to access location was denied');
+					return;
+				} else {
+					let location = await Location.getCurrentPositionAsync({
+						accuracy: Location.Accuracy.Balanced,
+						timeInterval: 5000,
+						accuracy: 1000,
+					});
+					setLocation(location);
+					setButtonActivation(true);
+					setButtonText('Get Address');
+				}
+			} else {
+				setErrorMsg(
+					'DEVICE LOCATION IS NOT ENABLED, Restart the application with location enabled'
+				);
 			}
-			let location = await Location.getCurrentPositionAsync({});
-			setLocation(location);
-			setButtonActivation(true);
-			setButtonText('Get Address');
 		})();
 	}, []);
 
@@ -73,22 +87,29 @@ export default function LocationSection({ navigation }) {
 				`https://api.opencagedata.com/geocode/v1/json?q=${latitude},+${longitude}&key=f7e47292a87f479bb355f49e907cce10&language=en&pretty=1&no_annotations=1`
 			);
 			const data = await response.json();
-
+			var tinyLGA = '';
 			if (response.ok) {
 				setUser(JSON.stringify(data));
 				setStreet(data.results[0].formatted);
-				setLga(data.results[0].components.county);
+				if (data.results[0].components.county == undefined) {
+					setLga(data.results[0].components.city);
+					tinyLGA = data.results[0].components.city;
+				} else {
+					setLga(data.results[0].components.county);
+					tinyLGA = data.results[0].components.county;
+				}
+
 				setState(data.results[0].components.state);
 				{
-					fetchData(data.results[0].components.county);
+					fetchData(tinyLGA);
 				}
 			} else {
-				console.error('Error fetching data:', data);
-				Alert.alert('Error fetching data:', data);
+				setErrorMsg(
+					`Error getting address :${data.status.message} \n Bad coordinates `
+				);
 			}
 		} catch (error) {
-			console.error('Error fetching data:', error);
-			Alert.alert('Error fetching data', error.message);
+			setErrorMsg(`${error.message}.\n Check device internet connection. `);
 		}
 	};
 	const fetchData = async (prop) => {
@@ -133,7 +154,15 @@ export default function LocationSection({ navigation }) {
 						>
 							Location
 						</Text>
-						{(user && (
+						{errorMsg && <Text style={{ color: 'red' }}>{errorMsg}</Text>}
+						<View>
+							<LottieView
+								source={require('../assets/mapanimation.json')}
+								autoPlay
+								loop
+							/>
+						</View>
+						{/* {(user && (
 							<Text
 								numberOfLines={1}
 								adjustsFontSizeToFit
@@ -183,7 +212,7 @@ export default function LocationSection({ navigation }) {
 							>
 								State
 							</Text>
-						)}
+						)} */}
 					</View>
 
 					<Pressable
