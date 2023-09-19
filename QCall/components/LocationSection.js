@@ -19,6 +19,7 @@ import CallRow from './CallRow';
 import { ScrollView } from 'react-native-gesture-handler';
 import LottieView from 'lottie-react-native';
 import MapAnimation from './Animation';
+import { useWindowDimensions } from 'react-native';
 
 var latitude = ' ';
 var longitude = '';
@@ -35,6 +36,8 @@ export default function LocationSection({ navigation }) {
 	const [buttonText, setButtonText] = useState('Waiting For Coordinates');
 	const [showMore, setShowMore] = useState(false);
 	const [myArray, setMyArray] = useState(null);
+	const [loadDots, setLoadDots] = useState(null);
+	const { fontScale } = useWindowDimensions(); // import useWindowDimensions()
 	const baseId = 'appHNtEXMOYDoVO7P';
 	const tableIdOrName = 'tbl3WmhzqEvq2TSDl';
 	const apiKey =
@@ -79,9 +82,11 @@ export default function LocationSection({ navigation }) {
 	} else if (location) {
 		latitude = location.coords.latitude;
 		longitude = location.coords.longitude;
+
 		text = JSON.stringify(location);
 	}
 	const handleClick = async () => {
+		console.log(fontScale);
 		try {
 			const response = await fetch(
 				`https://api.opencagedata.com/geocode/v1/json?q=${latitude},+${longitude}&key=f7e47292a87f479bb355f49e907cce10&language=en&pretty=1&no_annotations=1`
@@ -113,29 +118,35 @@ export default function LocationSection({ navigation }) {
 		}
 	};
 	const fetchData = async (prop) => {
-		axios
-			.post(
-				`https://api.airtable.com/v0/${baseId}/${tableIdOrName}/listRecords`,
-				{
-					view: 'grid',
-					filterByFormula: `{lganame} = "${prop}"`,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${apiKey}`,
-						'Content-Type': 'application/json',
+		setLoadDots(true);
+		try {
+			axios
+				.post(
+					`https://api.airtable.com/v0/${baseId}/${tableIdOrName}/listRecords`,
+					{
+						view: 'grid',
+						filterByFormula: `{lganame} = "${prop}"`,
 					},
-				}
-			)
-			.then((response) => {
-				var theresponse = JSON.parse(response.request.response);
-				var finalres = theresponse.records[0].fields;
-				setResponseData(finalres);
-				setShowMore(true);
-			})
-			.catch((error) => {
-				console.error('Error fetching data:', error);
-			});
+					{
+						headers: {
+							Authorization: `Bearer ${apiKey}`,
+							'Content-Type': 'application/json',
+						},
+					}
+				)
+				.then((response) => {
+					setLoadDots(false);
+					var theresponse = JSON.parse(response.request.response);
+					var finalres = theresponse.records[0].fields;
+					setResponseData(finalres);
+					setShowMore(true);
+				})
+				.catch((error) => {
+					setErrorMsg('Error fetching contact from database:', error);
+				});
+		} catch (error) {
+			setErrorMsg('Error fetching contact from database:', error);
+		}
 	};
 	return (
 		<SafeAreaProvider>
@@ -154,65 +165,55 @@ export default function LocationSection({ navigation }) {
 						>
 							Location
 						</Text>
-						{errorMsg && <Text style={{ color: 'red' }}>{errorMsg}</Text>}
-						<View>
-							<LottieView
-								source={require('../assets/mapanimation.json')}
-								autoPlay
-								loop
-							/>
+						{errorMsg && (
+							<Text
+								style={{
+									color: 'red',
+									alignSelf: 'center',
+									textAlign: 'center',
+								}}
+							>
+								{errorMsg}
+							</Text>
+						)}
+						<View style={{ height: '60%', justifyContent: 'space-evenly' }}>
+							{(user && (
+								<>
+									<Text
+										numberOfLines={1}
+										adjustsFontSizeToFit
+										style={styles.nonEmphasised}
+									>
+										{street}
+									</Text>
+									<Text
+										numberOfLines={1}
+										adjustsFontSizeToFit
+										style={styles.emphsised}
+									>
+										{lga}
+									</Text>
+									<Text
+										numberOfLines={1}
+										adjustsFontSizeToFit
+										style={styles.nonEmphasised}
+									>
+										{state}
+									</Text>
+								</>
+							)) || (
+								<LottieView
+									source={require('../assets/mapanimation.json')}
+									autoPlay
+									loop
+									style={{
+										width: '100%',
+										height: '100%',
+										alignSelf: 'center',
+									}}
+								/>
+							)}
 						</View>
-						{/* {(user && (
-							<Text
-								numberOfLines={1}
-								adjustsFontSizeToFit
-								style={styles.nonEmphasised}
-							>
-								{street}
-							</Text>
-						)) || (
-							<Text
-								numberOfLines={1}
-								adjustsFontSizeToFit
-								style={styles.nonEmphasised}
-							>
-								Street
-							</Text>
-						)}
-						{(user && (
-							<Text
-								numberOfLines={1}
-								adjustsFontSizeToFit
-								style={styles.emphsised}
-							>
-								{lga}
-							</Text>
-						)) || (
-							<Text
-								numberOfLines={1}
-								adjustsFontSizeToFit
-								style={styles.emphsised}
-							>
-								LGA
-							</Text>
-						)}
-						{(user && (
-							<Text
-								numberOfLines={1}
-								adjustsFontSizeToFit
-								style={styles.nonEmphasised}
-							>
-								{state}
-							</Text>
-						)) || (
-							<Text
-								numberOfLines={1}
-								adjustsFontSizeToFit
-								style={styles.nonEmphasised}
-							>
-								State
-							</Text>
-						)} */}
 					</View>
 
 					<Pressable
@@ -244,7 +245,12 @@ export default function LocationSection({ navigation }) {
 								number={JSON.stringify(responseData.fire)}
 								index={1}
 							/>
-						)) || <Text style={styles.pills}>Fire</Text>}
+						)) || (
+							<Text style={styles.pills}>
+								Fire
+								{loadDots && <Text> ...</Text>}
+							</Text>
+						)}
 					</View>
 					<View>
 						{(responseData && (
@@ -253,7 +259,12 @@ export default function LocationSection({ navigation }) {
 								number={JSON.stringify(responseData.medical)}
 								index={2}
 							/>
-						)) || <Text style={styles.pills}>Medical</Text>}
+						)) || (
+							<Text style={styles.pills}>
+								Medical
+								{loadDots && <Text> ...</Text>}
+							</Text>
+						)}
 					</View>
 					<View>
 						{(responseData && (
@@ -262,7 +273,11 @@ export default function LocationSection({ navigation }) {
 								number={JSON.stringify(responseData.police)}
 								index={3}
 							/>
-						)) || <Text style={styles.pills}>Police</Text>}
+						)) || (
+							<Text style={styles.pills}>
+								Police {loadDots && <Text> ...</Text>}
+							</Text>
+						)}
 					</View>
 
 					<Pressable
@@ -281,13 +296,13 @@ export default function LocationSection({ navigation }) {
 									? {
 											fontWeight: 'bold',
 											color: '#284b63',
-											fontSize: 20,
+											fontSize: 20 / fontScale,
 											alignSelf: 'center',
 									  }
 									: {
 											fontWeight: 'bold',
 											color: '#dee2e6',
-											fontSize: 20,
+											fontSize: 20 / fontScale,
 											alignSelf: 'center',
 									  }
 							}
@@ -368,21 +383,21 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		paddingVertical: 12,
-		paddingHorizontal: 92,
-		marginHorizontal: 10,
 		borderRadius: 8,
 		elevation: 3,
 		backgroundColor: '#D5BDA9',
+		width: '50%',
+		alignSelf: 'center',
 	},
 	buttonD: {
 		alignItems: 'center',
 		justifyContent: 'center',
 		paddingVertical: 12,
-		paddingHorizontal: 92,
-		marginHorizontal: 10,
 		borderRadius: 8,
 		elevation: 3,
 		backgroundColor: '#dee2e6',
+		width: '50%',
+		alignSelf: 'center',
 	},
 	buttonText: {
 		fontSize: 16,
