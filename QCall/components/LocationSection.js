@@ -52,6 +52,7 @@ export default function LocationSection({ navigation }) {
 
 	useEffect(() => {
 		(async () => {
+			setErrorMsg(null);
 			let locationEnabled = await Location.hasServicesEnabledAsync();
 			if (locationEnabled) {
 				let { status } = await Location.requestForegroundPermissionsAsync();
@@ -86,8 +87,8 @@ export default function LocationSection({ navigation }) {
 		text = JSON.stringify(location);
 	}
 	const handleClick = async () => {
-		console.log(fontScale);
 		try {
+			setErrorMsg(null);
 			const response = await fetch(
 				`https://api.opencagedata.com/geocode/v1/json?q=${latitude},+${longitude}&key=f7e47292a87f479bb355f49e907cce10&language=en&pretty=1&no_annotations=1`
 			);
@@ -120,6 +121,7 @@ export default function LocationSection({ navigation }) {
 	const fetchData = async (prop) => {
 		setLoadDots(true);
 		try {
+			setErrorMsg(null);
 			axios
 				.post(
 					`https://api.airtable.com/v0/${baseId}/${tableIdOrName}/listRecords`,
@@ -248,7 +250,7 @@ export default function LocationSection({ navigation }) {
 						)) || (
 							<Text style={styles.pills}>
 								Fire
-								{loadDots && <Text> ...</Text>}
+								{loadDots && <Text> .....</Text>}
 							</Text>
 						)}
 					</View>
@@ -262,7 +264,7 @@ export default function LocationSection({ navigation }) {
 						)) || (
 							<Text style={styles.pills}>
 								Medical
-								{loadDots && <Text> ...</Text>}
+								{loadDots && <Text> .....</Text>}
 							</Text>
 						)}
 					</View>
@@ -275,7 +277,7 @@ export default function LocationSection({ navigation }) {
 							/>
 						)) || (
 							<Text style={styles.pills}>
-								Police {loadDots && <Text> ...</Text>}
+								Police {loadDots && <Text> .....</Text>}
 							</Text>
 						)}
 					</View>

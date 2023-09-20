@@ -5,9 +5,11 @@ import {
 	Image,
 	Pressable,
 	Linking,
+	Alert,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 export default function CallRow(props) {
 	return (
 		<View
@@ -24,18 +26,19 @@ export default function CallRow(props) {
 			</View>
 			<Pressable
 				style={styles.callButton}
-				onPress={() => Linking.openURL(`tel:${JSON.stringify(props.number)}`)}
+				onPress={() => Linking.openURL(`tel:0${JSON.stringify(props.number)}`)}
+				onLongPress={() => Alert.alert(`Phone Number: 0${props.number}`)}
 			>
 				<Text style={{ textAlign: 'center' }}>
-					<AntDesign name='phone' size={24} color='black' />
+					<Entypo name='phone' size={24} color='#023047' />
 				</Text>
 			</Pressable>
 			<Pressable
 				style={styles.smsButton}
-				onPress={() => Linking.openURL(`sms:${JSON.stringify(props.number)}`)}
+				onPress={() => Linking.openURL(`sms:0${JSON.stringify(props.number)}`)}
 			>
 				<Text style={{ textAlign: 'center' }}>
-					<MaterialIcons name='sms' size={24} color='black' />
+					<MaterialIcons name='sms' size={24} color='#344e41' />
 				</Text>
 			</Pressable>
 		</View>
@@ -49,23 +52,25 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-evenly',
-		backgroundColor: '#fefae0',
+		backgroundColor: 'white',
 		width: '70%',
 	},
 	callButton: {
 		backgroundColor: '#00b4d8',
 		paddingVertical: '5%',
 		borderRadius: 10,
-		width: '15%',
+		width: '20%',
 		justifyContent: 'center',
 		alignContent: 'center',
+		elevation: 5,
 	},
 	smsButton: {
 		backgroundColor: '#dde5b6',
 		paddingVertical: '5%',
 		borderRadius: 10,
-		width: '15%',
+		width: '20%',
 		justifyContent: 'center',
 		alignContent: 'center',
+		elevation: 5,
 	},
 });

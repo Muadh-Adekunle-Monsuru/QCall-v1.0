@@ -11,6 +11,7 @@ import PageButton from './PageButton';
 import Police from './Police';
 export default function OthersHompage(props) {
 	const lga = props.route.params.lga.lga;
+	const state = props.route.params.state.state;
 	return (
 		<View style={styles.container}>
 			<Pressable
@@ -19,7 +20,9 @@ export default function OthersHompage(props) {
 			>
 				<PageButton text='Police Personnels' backgroundColor='#FFD6FF' />
 			</Pressable>
-			<Pressable onPress={() => props.navigation.navigate('Army')}>
+			<Pressable
+				onPress={() => props.navigation.navigate('Army', { lga: { lga } })}
+			>
 				<PageButton text='Army Personnels' backgroundColor='#E7C6FF' />
 			</Pressable>
 			<Pressable
@@ -34,7 +37,10 @@ export default function OthersHompage(props) {
 			</Pressable>
 			<Pressable
 				onPress={() =>
-					props.navigation.navigate('State Government', { lga: { lga } })
+					props.navigation.navigate('State Government', {
+						state: { state },
+						lga: { lga },
+					})
 				}
 			>
 				<PageButton

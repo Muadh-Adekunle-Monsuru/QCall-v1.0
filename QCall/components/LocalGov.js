@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import CallRow from './CallRow';
+import LottieView from 'lottie-react-native';
 const baseId = 'appHNtEXMOYDoVO7P';
 const tableIdOrName = 'tblas9r7MJBlyi48L';
 const apiKey =
@@ -19,6 +20,7 @@ const apiKey =
 export default function LocalGov(props) {
 	const [myArray, setMyArray] = useState(null);
 	const mylga = props.route.params.lga.lga;
+	const [errorMsg, setErrorMsg] = useState(null);
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -41,28 +43,50 @@ export default function LocalGov(props) {
 						setMyArray(Object.entries(finalres).splice(3));
 					})
 					.catch((error) => {
-						console.error('Error fetching data:', error);
+						setErrorMsg('Error fetching data check your internet connection');
 					});
 			} catch (error) {
-				console.error('Error fetching data:', error);
+				setErrorMsg('Error fetching data check your internet connection');
 			}
 		};
 		fetchData();
 	}, []);
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
-			<Text>Local Government</Text>
+			<Text style={styles.headerText}>{mylga} Local Government Contacts</Text>
 			<ScrollView
 				style={styles.container}
 				alwaysBounceVertical={true}
 				bounces={true}
 			>
-				{myArray &&
+				{errorMsg && (
+					<Text
+						style={{
+							color: 'red',
+							alignSelf: 'center',
+							textAlign: 'center',
+						}}
+					>
+						{errorMsg}
+					</Text>
+				)}
+				{(myArray &&
 					myArray.map(([key, value], index) => (
 						<View key={index}>
 							<CallRow name={key} number={value} index={index} />
 						</View>
-					))}
+					))) || (
+					<LottieView
+						source={require('../assets/loading.json')}
+						autoPlay
+						loop
+						style={{
+							width: '100%',
+							height: '100%',
+							alignSelf: 'center',
+						}}
+					/>
+				)}
 			</ScrollView>
 		</View>
 	);
@@ -84,5 +108,10 @@ const styles = StyleSheet.create({
 		flex: 0.9,
 		backgroundColor: 'white',
 		marginHorizontal: 10,
+	},
+	headerText: {
+		fontSize: 30,
+		fontWeight: 'bold',
+		textAlign: 'center',
 	},
 });
