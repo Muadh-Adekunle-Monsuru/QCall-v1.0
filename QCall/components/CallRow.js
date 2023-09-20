@@ -10,7 +10,57 @@ import {
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import axios from 'axios';
+
 export default function CallRow(props) {
+	const createTwoButtonAlert = (props) => {
+		Alert.alert(
+			`Phone number: 0${props}`,
+			'You can report the number if it is not functional',
+			[
+				{
+					text: 'Cancel',
+					style: 'cancel',
+				},
+				{ text: 'Report Number', onPress: () => handleAddEntry(`0${props}`) },
+			]
+		);
+	};
+	const handleAddEntry = (props) => {
+		const API_KEY =
+			'patvmCxNndpDP9Kcy.94a6eb441d9c345b0a234c040b1ea1962b6ca4e13768acba0af780b5a3a61395';
+		const BASE_ID = 'app6Hr5myxKLdPMh1';
+		const TABLE_NAME = 'tblD1HGu3pJHpGn5N';
+
+		const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
+
+		const data = {
+			records: [
+				{
+					fields: {
+						Number: props,
+						// Add more fields and values as needed
+					},
+				},
+			],
+		};
+
+		const headers = {
+			Authorization: `Bearer ${API_KEY}`,
+			'Content-Type': 'application/json',
+		};
+
+		axios
+			.post(url, data, { headers })
+			.then((response) => {
+				console.log('New record added successfully!', response.data);
+				// Clear the input fields or perform any other desired action
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+	};
+
 	return (
 		<View
 			style={{
@@ -27,7 +77,7 @@ export default function CallRow(props) {
 			<Pressable
 				style={styles.callButton}
 				onPress={() => Linking.openURL(`tel:0${JSON.stringify(props.number)}`)}
-				onLongPress={() => Alert.alert(`Phone Number: 0${props.number}`)}
+				onLongPress={() => createTwoButtonAlert(props.number)}
 			>
 				<Text style={{ textAlign: 'center' }}>
 					<Entypo name='phone' size={24} color='#023047' />

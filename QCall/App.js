@@ -10,7 +10,6 @@ import Army from './components/Army';
 import Police from './components/Police';
 import LocalGov from './components/LocalGov';
 import StateGov from './components/StateGov';
-
 const Stack = createStackNavigator();
 export default function App() {
 	return (

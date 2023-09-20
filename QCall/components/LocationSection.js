@@ -35,7 +35,6 @@ export default function LocationSection({ navigation }) {
 	const [state, setState] = useState(''); // Initialize street state
 	const [buttonText, setButtonText] = useState('Waiting For Coordinates');
 	const [showMore, setShowMore] = useState(false);
-	const [myArray, setMyArray] = useState(null);
 	const [loadDots, setLoadDots] = useState(null);
 	const { fontScale } = useWindowDimensions(); // import useWindowDimensions()
 	const baseId = 'appHNtEXMOYDoVO7P';
