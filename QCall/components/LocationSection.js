@@ -50,7 +50,7 @@ export default function LocationSection({ navigation }) {
 	};
 
 	useEffect(() => {
-		(async () => {
+		const getLocation = async () => {
 			setErrorMsg(null);
 			let locationEnabled = await Location.hasServicesEnabledAsync();
 			if (locationEnabled) {
@@ -73,7 +73,8 @@ export default function LocationSection({ navigation }) {
 					'DEVICE LOCATION IS NOT ENABLED, Restart the application with location enabled'
 				);
 			}
-		})();
+		};
+		getLocation();
 	}, []);
 
 	let text = 'Waiting...';

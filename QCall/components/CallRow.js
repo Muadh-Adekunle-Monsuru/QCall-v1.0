@@ -53,11 +53,10 @@ export default function CallRow(props) {
 		axios
 			.post(url, data, { headers })
 			.then((response) => {
-				console.log('New record added successfully!', response.data);
-				// Clear the input fields or perform any other desired action
+				Alert.alert('Number has been reported');
 			})
 			.catch((error) => {
-				console.error('Error:', error);
+				Alert.alert('Error reporting number:', error);
 			});
 	};
 
