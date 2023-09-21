@@ -9,6 +9,7 @@ import {
 	Linking,
 	AlertComponent,
 	Button,
+	ActivityIndicator,
 } from 'react-native';
 import * as Device from 'expo-device';
 import * as Location from 'expo-location';
@@ -250,7 +251,7 @@ export default function LocationSection({ navigation }) {
 						)) || (
 							<Text style={styles.pills}>
 								Fire
-								{loadDots && <Text> .....</Text>}
+								{loadDots && <ActivityIndicator size='small' color='#D5BDA9' />}
 							</Text>
 						)}
 					</View>
@@ -264,7 +265,7 @@ export default function LocationSection({ navigation }) {
 						)) || (
 							<Text style={styles.pills}>
 								Medical
-								{loadDots && <Text> .....</Text>}
+								{loadDots && <ActivityIndicator size='small' color='#D5BDA9' />}
 							</Text>
 						)}
 					</View>
@@ -277,7 +278,8 @@ export default function LocationSection({ navigation }) {
 							/>
 						)) || (
 							<Text style={styles.pills}>
-								Police {loadDots && <Text> .....</Text>}
+								Police{' '}
+								{loadDots && <ActivityIndicator size='small' color='#D5BDA9' />}
 							</Text>
 						)}
 					</View>
@@ -298,14 +300,16 @@ export default function LocationSection({ navigation }) {
 									? {
 											fontWeight: 'bold',
 											color: '#284b63',
-											fontSize: 20 / fontScale,
+											fontSize: scale(15),
 											alignSelf: 'center',
+											marginTop: scale(9),
 									  }
 									: {
 											fontWeight: 'bold',
 											color: '#dee2e6',
-											fontSize: 20 / fontScale,
+											fontSize: scale(15),
 											alignSelf: 'center',
+											marginTop: scale(9),
 									  }
 							}
 						>
@@ -350,15 +354,15 @@ const styles = StyleSheet.create({
 	},
 	blockHeading: {
 		fontWeight: 'bold',
-		fontSize: 35,
+		fontSize: scale(20),
 		textAlign: 'center',
 	},
 	nonEmphasised: {
-		fontSize: 15,
+		fontSize: verticalScale(15),
 		textAlign: 'center',
 	},
 	emphsised: {
-		fontSize: 70,
+		fontSize: scale(70),
 		textAlign: 'center',
 		fontWeight: '300',
 	},
@@ -384,7 +388,7 @@ const styles = StyleSheet.create({
 	buttonE: {
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingVertical: 12,
+		paddingVertical: 10,
 		borderRadius: 8,
 		elevation: 3,
 		backgroundColor: '#D5BDA9',
@@ -402,7 +406,7 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 	},
 	buttonText: {
-		fontSize: 16,
+		fontSize: scale(15),
 		lineHeight: 21,
 		fontWeight: 'bold',
 		letterSpacing: 0.25,
@@ -433,5 +437,6 @@ const styles = StyleSheet.create({
 		backgroundColor: '#f8f9fa',
 		width: '100%',
 		textAlign: 'center',
+		fontSize: scale(15),
 	},
 });

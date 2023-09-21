@@ -11,7 +11,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import axios from 'axios';
-
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 export default function CallRow(props) {
 	const createTwoButtonAlert = (props) => {
 		Alert.alert(
@@ -53,7 +53,7 @@ export default function CallRow(props) {
 		axios
 			.post(url, data, { headers })
 			.then((response) => {
-				Alert.alert('Number has been reported');
+				Alert.alert('The number has been successfully reported');
 			})
 			.catch((error) => {
 				Alert.alert('Error reporting number:', error);
@@ -71,7 +71,7 @@ export default function CallRow(props) {
 			key={props.index}
 		>
 			<View style={[styles.pills, { width: '50%' }]}>
-				<Text style={{ fontSize: 20 }}>{props.name}</Text>
+				<Text style={{ fontSize: scale(15) }}>{props.name}</Text>
 			</View>
 			<Pressable
 				style={styles.callButton}
@@ -79,7 +79,7 @@ export default function CallRow(props) {
 				onLongPress={() => createTwoButtonAlert(props.number)}
 			>
 				<Text style={{ textAlign: 'center' }}>
-					<Entypo name='phone' size={24} color='#023047' />
+					<Entypo name='phone' size={scale(24)} color='#023047' />
 				</Text>
 			</Pressable>
 			<Pressable
@@ -87,7 +87,7 @@ export default function CallRow(props) {
 				onPress={() => Linking.openURL(`sms:0${JSON.stringify(props.number)}`)}
 			>
 				<Text style={{ textAlign: 'center' }}>
-					<MaterialIcons name='sms' size={24} color='#344e41' />
+					<MaterialIcons name='sms' size={scale(24)} color='#344e41' />
 				</Text>
 			</Pressable>
 		</View>
