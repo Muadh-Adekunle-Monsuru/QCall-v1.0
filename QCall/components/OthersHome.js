@@ -7,47 +7,66 @@ import {
 	StyleSheet,
 	Alert,
 } from 'react-native';
-import PageButton from './PageButton';
-import Police from './Police';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 export default function OthersHompage(props) {
 	const lga = props.route.params.lga.lga;
 	const state = props.route.params.state.state;
 	return (
 		<View style={styles.container}>
-			<Pressable
-				style={{ alignContent: 'center' }}
-				onPress={() => props.navigation.navigate('Police', { lga: { lga } })}
-			>
-				<PageButton text='Police Personnels' backgroundColor='#FFD6FF' />
-			</Pressable>
-			<Pressable
-				onPress={() => props.navigation.navigate('Army', { lga: { lga } })}
-			>
-				<PageButton text='Army Personnels' backgroundColor='#E7C6FF' />
-			</Pressable>
-			<Pressable
-				onPress={() =>
-					props.navigation.navigate('Local Government', { lga: { lga } })
-				}
-			>
-				<PageButton
-					text='Local Government Personnels'
-					backgroundColor='#C8B6FF'
-				/>
-			</Pressable>
-			<Pressable
-				onPress={() =>
-					props.navigation.navigate('State Government', {
-						state: { state },
-						lga: { lga },
-					})
-				}
-			>
-				<PageButton
-					text='State Government Personnels'
-					backgroundColor='#B8C0FF'
-				/>
-			</Pressable>
+			<View style={styles.row}>
+				<Pressable
+					style={styles.button}
+					onPress={() => props.navigation.navigate('Police', { lga: { lga } })}
+				>
+					<View>
+						<Text style={{ textAlign: 'center', fontSize: scale(20) }}>
+							Police Contacts
+						</Text>
+					</View>
+				</Pressable>
+				<Pressable
+					onPress={() => props.navigation.navigate('Army', { lga: { lga } })}
+					style={styles.button}
+				>
+					<View>
+						<Text style={{ textAlign: 'center', fontSize: scale(20) }}>
+							{' '}
+							Army Contacts
+						</Text>
+					</View>
+				</Pressable>
+			</View>
+			<View style={styles.row}>
+				<Pressable
+					onPress={() =>
+						props.navigation.navigate('Local Government', { lga: { lga } })
+					}
+					style={styles.button}
+				>
+					<View>
+						<Text style={{ textAlign: 'center', fontSize: scale(20) }}>
+							{' '}
+							{lga} LGA Contacts
+						</Text>
+					</View>
+				</Pressable>
+				<Pressable
+					onPress={() =>
+						props.navigation.navigate('State Government', {
+							state: { state },
+							lga: { lga },
+						})
+					}
+					style={styles.button}
+				>
+					<View>
+						<Text style={{ textAlign: 'center', fontSize: scale(20) }}>
+							{' '}
+							{state} Contacts
+						</Text>
+					</View>
+				</Pressable>
+			</View>
 		</View>
 	);
 }
@@ -57,5 +76,18 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: 'white',
 		justifyContent: 'space-evenly',
+	},
+	row: {
+		flex: 0.25,
+		flexDirection: 'row',
+		justifyContent: 'space-evenly',
+	},
+	button: {
+		width: '40%',
+		borderRadius: 20,
+		justifyContent: 'center',
+		backgroundColor: '#f5ebe0',
+		alignContent: 'center',
+		elevation: 3,
 	},
 });

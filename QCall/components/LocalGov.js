@@ -53,7 +53,7 @@ export default function LocalGov(props) {
 	}, []);
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
-			<Text style={styles.headerText}>{mylga} Local Government Contacts</Text>
+			{/* <Text style={styles.headerText}>{mylga} Local Government Contacts</Text> */}
 			<ScrollView
 				style={styles.container}
 				alwaysBounceVertical={true}

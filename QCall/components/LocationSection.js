@@ -76,6 +76,8 @@ export default function LocationSection({ navigation }) {
 			}
 		};
 		getLocation();
+		getLocation();
+		getLocation();
 	}, []);
 
 	let text = 'Waiting...';

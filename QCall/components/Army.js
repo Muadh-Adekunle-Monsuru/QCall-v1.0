@@ -46,7 +46,7 @@ export default function Army(props) {
 
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
-			<Text style={styles.headerText}>{lga} Army Rank </Text>
+			{/* <Text style={styles.headerText}>{lga} Army Rank </Text> */}
 			<ScrollView
 				style={styles.container}
 				alwaysBounceVertical={true}

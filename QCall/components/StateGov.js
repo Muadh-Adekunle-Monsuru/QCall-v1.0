@@ -54,7 +54,7 @@ export default function StateGov(props) {
 	}, []);
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
-			<Text style={styles.headerText}>{mystate} State Government Contact</Text>
+			{/* <Text style={styles.headerText}>{mystate} State Government Contact</Text> */}
 			<ScrollView
 				style={styles.container}
 				alwaysBounceVertical={true}

@@ -46,7 +46,7 @@ export default function Police(props) {
 
 	return (
 		<View style={{ flex: 1, backgroundColor: 'white' }}>
-			<Text style={styles.headerText}>{lga} Police Rank </Text>
+			{/* <Text style={styles.headerText}>{lga} Police Rank </Text> */}
 			<ScrollView
 				style={styles.container}
 				alwaysBounceVertical={true}
