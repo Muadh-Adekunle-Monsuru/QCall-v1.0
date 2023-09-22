@@ -8,6 +8,7 @@ import {
 	Alert,
 } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { AntDesign } from '@expo/vector-icons';
 export default function OthersHompage(props) {
 	const lga = props.route.params.lga.lga;
 	const state = props.route.params.state.state;
@@ -66,6 +67,12 @@ export default function OthersHompage(props) {
 						</Text>
 					</View>
 				</Pressable>
+			</View>
+			<View>
+				<Text style={{ textAlign: 'center' }}>
+					<AntDesign name='infocirlceo' size={scale(10)} color='black' /> Tip:
+					Long-press on the phone button to report a number.{' '}
+				</Text>
 			</View>
 		</View>
 	);
