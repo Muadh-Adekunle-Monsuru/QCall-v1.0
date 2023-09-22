@@ -3,8 +3,7 @@
 The Emergency Contact App
 **QCall - Location-Based Emergency Number App**
 
-QCall is a mobile app designed to provide users with relevant emergency phone numbers based on their current location within Nigeria. The app utilizes a dataset of Nigeria's geopolitical zones, accurately categorized by local government areas. It offers phone numbers for various emergency types including Police, Fire, Medical Emergencies, and more. Users can provide feedback on the functionality of each number. The app ensures offline usability by storing coordinates and local contact data, though users are alerted about potential data lag.
-
+QCall is a mobile app designed to provide users with relevant emergency phone numbers based on their current location within Nigeria. The app utilizes a dataset of Nigeria's geopolitical zones, accurately categorized by local government areas. It offers phone numbers for various emergency types including Police, Fire, Medical Emergencies, and more. Users can provide feedback on the functionality of each number. 
 **Features:**
 
 - Location-based emergency number display
@@ -15,10 +14,8 @@ QCall is a mobile app designed to provide users with relevant emergency phone nu
 - Emergency numbers for different categories
 - SMS/WhatsApp functionality
 - User feedback mechanism
-- Previous location number recall
 - User-friendly error messages
 - Proper adherence to database structure
-- State-level redirection if local number unavailable
 
 **UI/UX:**
 
