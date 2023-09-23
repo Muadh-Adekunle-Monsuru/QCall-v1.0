@@ -36,6 +36,7 @@ export default function LocationSection({ navigation }) {
 	const [state, setState] = useState(''); // Initialize street state
 	const [buttonText, setButtonText] = useState('Waiting For Coordinates');
 	const [showMore, setShowMore] = useState(false);
+	const [loadCircle, setLoadCircle] = useState(null);
 	const [loadDots, setLoadDots] = useState(null);
 	const { fontScale } = useWindowDimensions(); // import useWindowDimensions()
 	const baseId = 'appHNtEXMOYDoVO7P';
@@ -90,6 +91,7 @@ export default function LocationSection({ navigation }) {
 		text = JSON.stringify(location);
 	}
 	const handleClick = async () => {
+		setLoadCircle(true);
 		try {
 			setErrorMsg(null);
 			const response = await fetch(
@@ -112,14 +114,17 @@ export default function LocationSection({ navigation }) {
 				{
 					fetchData(tinyLGA);
 				}
+				setLoadCircle(false);
 			} else {
 				setErrorMsg(
 					`Error getting address :${data.status.message} \n Bad coordinates `
 				);
+				setLoadCircle(false);
 			}
 		} catch (error) {
 			setErrorMsg(`${error.message}.\n Check device internet connection. `);
 		}
+		setLoadCircle(false);
 	};
 	const fetchData = async (prop) => {
 		setLoadDots(true);
@@ -232,6 +237,7 @@ export default function LocationSection({ navigation }) {
 							style={styles.buttonText}
 						>
 							{buttonText}
+							{loadCircle && <ActivityIndicator size='small' color='blue' />}
 						</Text>
 					</Pressable>
 				</View>
