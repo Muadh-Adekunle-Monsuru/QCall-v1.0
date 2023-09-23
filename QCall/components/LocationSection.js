@@ -71,7 +71,7 @@ export default function LocationSection({ navigation }) {
 				}
 			} else {
 				setErrorMsg(
-					'DEVICE LOCATION IS NOT ENABLED, Restart the application with location enabled'
+					'Device location is not enabled, restart the application with location enabled'
 				);
 			}
 		};
